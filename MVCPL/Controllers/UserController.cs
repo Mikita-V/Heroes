@@ -4,26 +4,29 @@ using System.Web;
 using System.Web.Mvc;
 using BLL.Entities;
 using BLL.Interface;
-using MVCPL.Infrastructure.Helpers;
+using MVCPL.Util.Helpers;
 using MVCPL.Models;
+using MVCPL.Util.Models;
+using MVCPL.Infrastructure.Mapping;
 
 namespace MVCPL.Controllers
 {
     public class UserController : Controller
     {
         private readonly IUserService userService;
+        private readonly IRewardService rewardService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IRewardService rewardService)
         {
             this.userService = userService;
+            this.rewardService = rewardService;
         }
 
         public ActionResult Index()
         {
-            var model =
-                userService.GetAllUsers()
-                    .Select(u => new UserViewModel { Id = u.Id, Name = u.Name, BirthDate = u.BirthDate, Photo = u.Photo })
-                    .ToList();
+            var model = userService
+                .GetAllUsers()
+                .Select(_ => _.ToViewModel());
 
             return View(model);
         }
@@ -35,14 +38,9 @@ namespace MVCPL.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(UserViewModel user, HttpPostedFileBase image)
+        public ActionResult Create(UserViewModel user)
         {
-            var bllUser = new BllUser { Id = user.Id, Name = user.Name, BirthDate = user.BirthDate };
-            if (image != null)
-            {
-                bllUser.Photo = ImageHelper.MapPicture(image);
-            }
-
+            var bllUser = user.ToBllModel();
             userService.CreateUser(bllUser);
 
             return RedirectToAction("Index");
@@ -51,31 +49,44 @@ namespace MVCPL.Controllers
         [HttpGet]
         public ActionResult Update(int id)
         {
-            var user = userService.GetUserById(id);
+            var possibleRewards = rewardService
+                .GetAllPossibleRewards(id)
+                .Select(_ => _.ToViewModel())
+                .ToList();
+            var model = userService
+                .GetUserById(id)
+                .ToViewModel(possibleRewards);
 
-            return View(new UserViewModel { Id = user.Id, Name = user.Name, BirthDate = user.BirthDate, Photo = user.Photo });
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult Update(UserViewModel user, HttpPostedFileBase image)
+        public ActionResult Update(UserViewModel user)
         {
-            var bllUser = new BllUser { Id = user.Id, Name = user.Name, BirthDate = user.BirthDate };
-            if (image != null)
+            if (ModelState.IsValid)
             {
-                bllUser.Photo = ImageHelper.MapPicture(image);
+                var selectedRewards = user.Rewards
+                    .Where(_ => _.IsSelected == true)
+                    .Select(_ => _.ToBllModel())
+                    .ToList();
+                var bllUser = user.ToBllModel(selectedRewards);
+
+                userService.UpdateUser(bllUser);
+
+                return RedirectToAction("Index");
             }
 
-            userService.UpdateUser(bllUser);
-
-            return RedirectToAction("Index");
+            return View(user);
         }
 
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var user = userService.GetUserById(id);
+            var model = userService
+                .GetUserById(id)
+                .ToViewModel();
 
-            return View(new UserViewModel { Id = user.Id, Name = user.Name, BirthDate = user.BirthDate });
+            return View(model);
         }
 
         [HttpPost, ActionName("Delete")]

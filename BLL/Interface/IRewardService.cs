@@ -10,6 +10,7 @@ namespace BLL.Interface
     public interface IRewardService
     {
         IEnumerable<BllReward> GetAllRewards();
+        IEnumerable<BllReward> GetAllPossibleRewards(int userId);
         BllReward GetRewardById(int id);
         void CreateReward(BllReward reward);
         void UpdateReward(BllReward reward);

@@ -13,6 +13,7 @@ namespace BLL.Entities
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public byte[] Photo { get; set; }
+        //public IEnumerable<int> Rewards { get; set; }
         public IEnumerable<BllReward> Rewards { get; set; }
     }
 }

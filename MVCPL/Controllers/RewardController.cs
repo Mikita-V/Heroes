@@ -4,26 +4,41 @@ using System.Web;
 using System.Web.Mvc;
 using BLL.Entities;
 using BLL.Interface;
-using MVCPL.Infrastructure.Helpers;
+using MVCPL.Util.Helpers;
 using MVCPL.Models;
+using MVCPL.Util.Models;
 
 namespace MVCPL.Controllers
 {
     public class RewardController : Controller
     {
         private readonly IRewardService rewardService;
+        private readonly IUserService userService;
 
-        public RewardController(IRewardService rewardService)
+        public RewardController(IRewardService rewardService, IUserService userService)
         {
             this.rewardService = rewardService;
+            this.userService = userService;
         }
 
         public ActionResult Index()
         {
             var model =
                 rewardService.GetAllRewards()
-                    .Select(r => new RewardViewModel { Id = r.Id, Description = r.Description, Title = r.Title, Photo = r.Image })
-                    .ToList();
+                    .Select(r => new RewardViewModel
+                    {
+                        Id = r.Id,
+                        Description = r.Description,
+                        Title = r.Title,
+                        Image = r.Image == null ? null : (HttpPostedFileBase)new MemoryPostedFile(r.Image),
+                        //User = new UserViewModel
+                        //{
+                        //    //fuuuuuuuuuuuuuuuuuuuuuuuuuuuuu
+                        //    Id = userService.GetUserById((int)r.User).Id,
+                        //    Name = userService.GetUserById((int)r.User).Name,
+                        //    BirthDate = userService.GetUserById((int)r.User).BirthDate
+                        //}
+                    }).ToList();
 
             return View(model);
         }
@@ -35,12 +50,17 @@ namespace MVCPL.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(RewardViewModel reward, HttpPostedFileBase image)
+        public ActionResult Create(RewardViewModel reward)
         {
-            var bllReward = new BllReward { Id = reward.Id, Description = reward.Description, Title = reward.Title };
-            if (image != null)
+            var bllReward = new BllReward
             {
-                bllReward.Image = ImageHelper.MapPicture(image);
+                Id = reward.Id,
+                Description = reward.Description,
+                Title = reward.Title
+            };
+            if (reward.Image != null)
+            {
+                bllReward.Image = ImageHelper.MapPicture(reward.Image);
             }
 
             rewardService.CreateReward(bllReward);
@@ -53,7 +73,13 @@ namespace MVCPL.Controllers
         {
             var reward = rewardService.GetRewardById(id);
 
-            return View(new RewardViewModel { Id = reward.Id, Description = reward.Description, Title = reward.Title, Photo = reward.Image });
+            return View(new RewardViewModel
+            {
+                Id = reward.Id,
+                Description = reward.Description,
+                Title = reward.Title,
+                Image = reward.Image == null ? null : (HttpPostedFileBase)new MemoryPostedFile(reward.Image)
+            });
         }
 
         [HttpPost]
@@ -75,7 +101,7 @@ namespace MVCPL.Controllers
         {
             var reward = rewardService.GetRewardById(id);
 
-            return View(new RewardViewModel { Id = reward.Id, Description = reward.Description, Title = reward.Title, Photo = reward.Image });
+            return View(new RewardViewModel { Id = reward.Id, Description = reward.Description, Title = reward.Title, Image = reward.Image == null ? null : (HttpPostedFileBase)new MemoryPostedFile(reward.Image) });
         }
 
         [HttpPost, ActionName("Delete")]

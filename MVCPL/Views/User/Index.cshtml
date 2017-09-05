@@ -1,8 +1,9 @@
-﻿@model IEnumerable<MVCPL.Models.UserViewModel>
+﻿@using MVCPL.Util.Helpers
+@model IEnumerable<MVCPL.Models.UserViewModel>
 
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    //Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
 <h2>Index</h2>
@@ -21,6 +22,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Photo)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rewards)
+        </th>
         <th></th>
     </tr>
 
@@ -36,13 +40,34 @@
             <td>
                 @if (item.Photo != null)
                 {
-                    @Html.Raw("<img alt=\"...\" height=50 width=50 src=\"data:image/jpeg;base64," + Convert.ToBase64String(item.Photo) + "\" />")
+                    @Html.Raw("<img alt=\"...\" height=50 width=50 src=\"data:image/jpeg;base64," + Convert.ToBase64String(ImageHelper.MapPicture(item.Photo)) + "\" />")
                 }
                 else
                 {
-                    <img alt="..." height=50 width=50 src="../../img/no-image.jpg"/>
+                    <img alt="..." height=50 width=50 src="../../img/no-image.jpg" />
                 }
             </td>
+            @if (item.Rewards != null && item.Rewards.Any())
+            {
+                <td>
+                    @foreach (var reward in item.Rewards)
+                    {
+                        if (reward.Image != null)
+                        {
+                            @Html.Raw("<img alt=\"...\" height=50 width=50 src=\"data:image/jpeg;base64," + Convert.ToBase64String(ImageHelper.MapPicture(reward.Image)) + "\" />")
+                        }
+                        else
+                        {
+                            <img alt="..." height=50 width=50 src="../../img/no-image.jpg" />
+                        }
+                    }
+                </td>
+
+            }
+            else
+            {
+                <td>No rewards yet...</td>
+            }
             <td>
                 @Html.ActionLink("Edit", "Update", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })

@@ -1,4 +1,4 @@
-﻿using MVCPL.Infrastructure.DependencyResolving;
+﻿using MVCPL.Util.DependencyResolving;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(MVCPL.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(MVCPL.App_Start.NinjectWebCommon), "Stop")]

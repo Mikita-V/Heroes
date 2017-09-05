@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
 using BLL.Entities;
 using BLL.Interface;
-using DAL.DTO;
 using DAL.Interface;
+using BLL.Mapping;
 
 namespace BLL.Services
 {
@@ -22,38 +19,47 @@ namespace BLL.Services
 
         public IEnumerable<BllReward> GetAllRewards()
         {
-            var rewards =
-                uow.Rewards.GetAll()
-                    .Select(r => new BllReward {Id = r.Id, Description = r.Description, Title = r.Title, Image = r.Image})
-                    .ToList();
+            var rewards = uow.Rewards
+                .GetAll()
+                .Select(_ => _.ToBllModel())
+                .ToList();
 
             return rewards;
+        }
+
+        public IEnumerable<BllReward> GetAllPossibleRewards(int userId)
+        {
+            return this.GetAllRewards()
+                .Where(_ => _.User == null || _.User.Id == userId);
         }
 
         public BllReward GetRewardById(int id)
         {
             //Possible nullreferenceexception
-            var reward = uow.Rewards.GetById(id);
-            return new BllReward {Id = reward.Id, Description = reward.Description, Title = reward.Title, Image = reward.Image};
+            var reward = uow.Rewards
+                .GetById(id)
+                .ToBllModel();
+
+            return reward;
         }
 
         public void CreateReward(BllReward reward)
         {
-            var dalReward = new DalReward {Id = reward.Id, Description = reward.Description, Title = reward.Title, Image = reward.Image};
+            var dalReward = reward.ToDalModel();
             uow.Rewards.Create(dalReward);
             uow.Commit();
         }
 
         public void UpdateReward(BllReward reward)
         {
-            var dalReward = new DalReward { Id = reward.Id, Description = reward.Description, Title = reward.Title, Image = reward.Image };
+            var dalReward = reward.ToDalModel();
             uow.Rewards.Update(dalReward);
             uow.Commit();
         }
 
         public void DeleteReward(BllReward reward)
         {
-            var dalReward = new DalReward { Id = reward.Id, Description = reward.Description, Title = reward.Title, Image = reward.Image };
+            var dalReward = reward.ToDalModel();
             uow.Rewards.Delete(dalReward);
             uow.Commit();
         }

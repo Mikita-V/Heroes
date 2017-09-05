@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
 using DAL.DTO;
 using DAL.Interface;
 using ORM.Entities;
@@ -22,27 +19,63 @@ namespace DAL.Repos
 
         public IEnumerable<DalReward> GetAll()
         {
-            var rewards = context.Set<Reward>().Select(r => new DalReward {Id = r.Id, Description = r.Description, Title = r.Title, Image = r.Image}).ToList();
+            var rewards = context.Set<Reward>()
+                .Select(_ => new DalReward
+                {
+                    Id = _.Id,
+                    Title = _.Title,
+                    Description = _.Description,
+                    Image = _.Image,
+                    //FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+                    User = _.User == null ? null : new DalUser { Id = _.User.Id }
+                })
+                .ToList();
+
             return rewards;
         }
 
         public DalReward GetById(int id)
         {
             var reward = context.Set<Reward>().SingleOrDefault(r => r.Id == id);
-            return new DalReward {Id = reward.Id, Description = reward.Description, Title = reward.Title, Image = reward.Image};
+
+            return new DalReward
+            {
+                Id = reward.Id,
+                Title = reward.Title,
+                Description = reward.Description,
+                Image = reward.Image,
+                //FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+                User = reward.User == null ? null : new DalUser { Id = reward.User.Id }
+            };
         }
 
         public void Create(DalReward entity)
         {
             //null reference
-            var reward = new Reward {Id = entity.Id, Description = entity.Description, Title = entity.Title, Image = entity.Image};
+            var reward = new Reward
+            {
+                Id = entity.Id,
+                Description = entity.Description,
+                Title = entity.Title,
+                Image = entity.Image,
+                //User = context.Set<User>().SingleOrDefault(_ => _.Id == entity.User.Id)
+            };
             context.Entry(reward).State = EntityState.Added;
         }
 
         public void Update(DalReward entity)
         {
-            var reward = new Reward { Id = entity.Id, Description = entity.Description, Title = entity.Title, Image = entity.Image };
-            context.Entry(reward).State = EntityState.Modified;
+            var currentReward = context.Set<Reward>().SingleOrDefault(_ => _.Id == entity.Id);
+            var reward = new Reward
+            {
+                Id = entity.Id,
+                Description = entity.Description,
+                Title = entity.Title,
+                Image = entity.Image ?? currentReward.Image,
+                //User = context.Set<User>().SingleOrDefault(_ => _.Id == entity.User.Id)
+            };
+            //context.Entry(reward).State = EntityState.Modified;
+            context.Entry(currentReward).CurrentValues.SetValues(reward);
         }
 
         public void Delete(DalReward entity)

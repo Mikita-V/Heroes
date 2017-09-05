@@ -6,6 +6,7 @@ using BLL.Entities;
 using BLL.Interface;
 using DAL.DTO;
 using DAL.Interface;
+using BLL.Mapping;
 
 namespace BLL.Services
 {
@@ -20,36 +21,41 @@ namespace BLL.Services
 
         public IEnumerable<BllUser> GetAllUsers()
         {
-            var users =
-                uow.Users.GetAll()
-                    .Select(u => new BllUser {Id = u.Id, Name = u.Name, BirthDate = u.BirthDate, Photo = u.Photo})
-                    .ToList();
+            var users = uow.Users
+                .GetAll()
+                .Select(_ => _.ToBllModel())
+                .ToList();
+
             return users;
         }
 
         public BllUser GetUserById(int id)
         {
-            var user = uow.Users.GetById(id);
-            return new BllUser {Id = user.Id, Name = user.Name, BirthDate = user.BirthDate, Photo = user.Photo};
+            var user = uow.Users
+                .GetById(id)
+                .ToBllModel();
+
+            return user;
         }
 
         public void CreateUser(BllUser user)
         {
-            var dalUser = new DalUser {Id = user.Id, Name = user.Name, BirthDate = user.BirthDate, Photo = user.Photo };
+            var dalUser = user.ToDalModel();
             uow.Users.Create(dalUser);
             uow.Commit();
         }
 
         public void UpdateUser(BllUser user)
         {
-            var dalUser = new DalUser { Id = user.Id, Name = user.Name, BirthDate = user.BirthDate, Photo = user.Photo };
+            var dalUser = user.ToDalModel();
             uow.Users.Update(dalUser);
             uow.Commit();
         }
 
+        //change user to id
         public void DeleteUser(BllUser user)
         {
-            var dalUser = new DalUser { Id = user.Id, Name = user.Name, BirthDate = user.BirthDate, Photo = user.Photo };
+            var dalUser = user.ToDalModel();
             uow.Users.Delete(dalUser);
             uow.Commit();
         }

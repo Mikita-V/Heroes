@@ -1,8 +1,9 @@
-﻿@model IEnumerable<MVCPL.Models.RewardViewModel>
+﻿@using MVCPL.Util.Helpers
+@model IEnumerable<MVCPL.Models.RewardViewModel>
 
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_RewardLayout.cshtml";
+    //Layout = "~/Views/Shared/_RewardLayout.cshtml";
 }
 
 <h2>Index</h2>
@@ -22,7 +23,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Photo)
+            @Html.DisplayNameFor(model => model.Image)
         </th>
         <th></th>
     </tr>
@@ -40,9 +41,9 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @if (item.Photo != null)
+                @if (item.Image != null)
                 {
-                    @Html.Raw("<img alt=\"...\" height=50 width=50 src=\"data:image/jpeg;base64," + Convert.ToBase64String(item.Photo) + "\" />")
+                    @Html.Raw("<img alt=\"...\" height=50 width=50 src=\"data:image/jpeg;base64," + Convert.ToBase64String(ImageHelper.MapPicture(item.Image)) + "\" />")
                 }
                 else
                 {

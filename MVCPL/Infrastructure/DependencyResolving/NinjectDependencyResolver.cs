@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using DependencyResolver.Resolving;
 using Ninject;
 
-namespace MVCPL.Infrastructure.DependencyResolving
+namespace MVCPL.Util.DependencyResolving
 {
     public class NinjectDependencyResolver : IDependencyResolver
     {

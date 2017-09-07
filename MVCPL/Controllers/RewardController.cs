@@ -16,6 +16,7 @@ namespace MVCPL.Controllers
         }
 
         //TODO: Null reference
+        [Route("awards")]
         public ActionResult Index()
         {
             var model = _rewardService
@@ -25,6 +26,7 @@ namespace MVCPL.Controllers
             return View(model);
         }
 
+        [Route("create-award")]
         [HttpGet]
         public ActionResult Create()
         {
@@ -32,6 +34,7 @@ namespace MVCPL.Controllers
         }
 
         //TODO: Null reference, validation
+        [Route("create-award")]
         [HttpPost]
         public ActionResult Create(RewardViewModel reward)
         {
@@ -42,6 +45,7 @@ namespace MVCPL.Controllers
         }
 
         //TODO: Null reference
+        [Route("award/{id:int}/edit")]
         [HttpGet]
         public ActionResult Update(int id)
         {
@@ -53,6 +57,7 @@ namespace MVCPL.Controllers
         }
 
         //TODO: Null reference
+        [Route("award/{id:int}/edit")]
         [HttpPost]
         public ActionResult Update(RewardViewModel reward)
         {
@@ -67,6 +72,7 @@ namespace MVCPL.Controllers
             return View(reward);
         }
 
+        [Route("award/{id:int}")]
         [HttpGet]
         public ActionResult Details(int id)
         {
@@ -78,6 +84,7 @@ namespace MVCPL.Controllers
         }
 
         //TODO: Null reference
+        [Route("award/{id:int}/delete")]
         [HttpGet]
         public ActionResult Delete(int id)
         {
@@ -88,6 +95,7 @@ namespace MVCPL.Controllers
             return View(reward);
         }
 
+        [Route("award/{id:int}/delete")]
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {

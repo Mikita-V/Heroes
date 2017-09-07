@@ -8,25 +8,27 @@ namespace MVCPL.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IUserService userService;
-        private readonly IRewardService rewardService;
+        private readonly IUserService _userService;
+        private readonly IRewardService _rewardService;
 
         public UserController(IUserService userService, IRewardService rewardService)
         {
-            this.userService = userService;
-            this.rewardService = rewardService;
+            this._userService = userService;
+            this._rewardService = rewardService;
         }
 
         //TODO: Null reference
+        [Route("users")]
         public ActionResult Index()
         {
-            var model = userService
+            var model = _userService
                 .GetAllUsers()
                 .Select(_ => _.ToViewModel());
 
             return View(model);
         }
 
+        [Route("create-user")]
         [HttpGet]
         public ActionResult Create()
         {
@@ -34,24 +36,26 @@ namespace MVCPL.Controllers
         }
 
         //TODO: Null reference, validation
+        [Route("create-user")]
         [HttpPost]
         public ActionResult Create(UserViewModel user)
         {
             var bllUser = user.ToBllModel();
-            userService.CreateUser(bllUser);
+            _userService.CreateUser(bllUser);
 
             return RedirectToAction("Index");
         }
 
         //TODO: Null reference
+        [Route("user/{id:int}/edit")]
         [HttpGet]
         public ActionResult Update(int id)
         {
-            var possibleRewards = rewardService
+            var possibleRewards = _rewardService
                 .GetAllPossibleRewards(id)
                 .Select(_ => _.ToViewModel())
                 .ToList();
-            var model = userService
+            var model = _userService
                 .GetUserById(id)
                 .ToViewModel(possibleRewards);
 
@@ -59,6 +63,7 @@ namespace MVCPL.Controllers
         }
 
         //TODO: Null reference
+        [Route("user/{id:int}/edit")]
         [HttpPost]
         public ActionResult Update(UserViewModel user)
         {
@@ -70,7 +75,7 @@ namespace MVCPL.Controllers
                     .ToList();
                 var bllUser = user.ToBllModel(selectedRewards);
 
-                userService.UpdateUser(bllUser);
+                _userService.UpdateUser(bllUser);
 
                 return RedirectToAction("Index");
             }
@@ -78,24 +83,41 @@ namespace MVCPL.Controllers
             return View(user);
         }
 
+        [Route("user/{id:int}")]
+        [HttpGet]
+        public ActionResult Details(int id)
+        {
+            var possibleRewards = _rewardService
+                .GetAllPossibleRewards(id)
+                .Select(_ => _.ToViewModel())
+                .ToList();
+            var model = _userService
+                .GetUserById(id)
+                .ToViewModel(possibleRewards);
+
+            return View(model);
+        }
+
         //TODO: Null reference
+        [Route("user/{id:int}/delete")]
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var model = userService
+            var model = _userService
                 .GetUserById(id)
                 .ToViewModel();
 
             return View(model);
         }
 
+        [Route("user/{id:int}/delete")]
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var user = userService.GetUserById(id);
+            var user = _userService.GetUserById(id);
             if (user != null)
             {
-                userService.DeleteUser(user);
+                _userService.DeleteUser(user);
             }
 
             return RedirectToAction("Index");
@@ -103,7 +125,7 @@ namespace MVCPL.Controllers
 
         public FileResult DownloadUsers()
         {
-            var bytes = userService.UsersToByteArray();
+            var bytes = _userService.UsersToByteArray();
 
             return File(bytes, "text", "Users.txt");
         }

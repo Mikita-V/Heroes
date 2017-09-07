@@ -219,6 +219,7 @@
     <Content Include="Views\Reward\Update.cshtml" />
     <Content Include="Views\Shared\_UserLayout.cshtml" />
     <Content Include="Views\Shared\_RewardLayout.cshtml" />
+    <Content Include="Views\Reward\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

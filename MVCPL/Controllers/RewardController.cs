@@ -67,6 +67,16 @@ namespace MVCPL.Controllers
             return View(reward);
         }
 
+        [HttpGet]
+        public ActionResult Details(int id)
+        {
+            var reward = _rewardService
+                .GetRewardById(id)
+                .ToViewModel();
+
+            return View(reward);
+        }
+
         //TODO: Null reference
         [HttpGet]
         public ActionResult Delete(int id)

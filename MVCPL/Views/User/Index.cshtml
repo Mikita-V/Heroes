@@ -46,7 +46,7 @@
                 <td>
                     @foreach (var reward in item.Rewards)
                     {
-                        @Html.CustomImageActionLink(reward.Image.ToBase64String(), "...", 50, 50, reward.Title, "Update", "Reward", new { id = reward.Id })
+                        @Html.CustomImageActionLink(reward.Image.ToBase64String(), "...", 50, 50, reward.Title, "Details", "Reward", new { id = reward.Id })
                     }
                 </td>
             }

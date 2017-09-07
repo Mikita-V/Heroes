@@ -1,5 +1,4 @@
-﻿
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using Ninject;
 using Ninject.Web.Common;
 using BLL.Interface;
@@ -10,7 +9,7 @@ using DAL.Interface;
 using DAL.Repos;
 using ORM.Db;
 
-namespace DependencyResolver.Resolving
+namespace DI
 {
     public static class ResolvingConfig
     {

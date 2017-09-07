@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using DependencyResolver.Resolving;
 using Ninject;
+using DI;
 
-namespace MVCPL.Infrastructure.DependencyResolving
+namespace MVCPL.Infrastructure.DI
 {
     public class NinjectDependencyResolver : IDependencyResolver
     {

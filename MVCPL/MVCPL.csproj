@@ -156,7 +156,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\DependencyResolving\NinjectDependencyResolver.cs" />
+    <Compile Include="Infrastructure\DI\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\Mapping\MvcRewardMapping.cs" />
     <Compile Include="Infrastructure\Mapping\MvcUserMapping.cs" />
     <Compile Include="Util\Extensions\HttpPostedFileBaseExtension.cs" />
@@ -248,9 +248,9 @@
       <Project>{0fcbca2f-772d-466f-abc2-6a929fd1c879}</Project>
       <Name>BLL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DependencyResolver\DependencyResolver.csproj">
-      <Project>{81996754-f933-4ae1-904f-78760922e54b}</Project>
-      <Name>DependencyResolver</Name>
+    <ProjectReference Include="..\DI\DI.csproj">
+      <Project>{a3454618-0532-449d-a86c-669702f12690}</Project>
+      <Name>DI</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

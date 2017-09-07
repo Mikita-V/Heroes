@@ -1,12 +1,7 @@
-﻿using System.IO;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using BLL.Entities;
 using BLL.Interface;
-using MVCPL.Util.Helpers;
 using MVCPL.Models;
-using MVCPL.Util.Models;
 using MVCPL.Infrastructure.Mapping;
 
 namespace MVCPL.Controllers
@@ -22,6 +17,7 @@ namespace MVCPL.Controllers
             this.rewardService = rewardService;
         }
 
+        //TODO: Null reference
         public ActionResult Index()
         {
             var model = userService
@@ -37,6 +33,7 @@ namespace MVCPL.Controllers
             return View();
         }
 
+        //TODO: Null reference, validation
         [HttpPost]
         public ActionResult Create(UserViewModel user)
         {
@@ -46,6 +43,7 @@ namespace MVCPL.Controllers
             return RedirectToAction("Index");
         }
 
+        //TODO: Null reference
         [HttpGet]
         public ActionResult Update(int id)
         {
@@ -60,6 +58,7 @@ namespace MVCPL.Controllers
             return View(model);
         }
 
+        //TODO: Null reference
         [HttpPost]
         public ActionResult Update(UserViewModel user)
         {
@@ -79,6 +78,7 @@ namespace MVCPL.Controllers
             return View(user);
         }
 
+        //TODO: Null reference
         [HttpGet]
         public ActionResult Delete(int id)
         {

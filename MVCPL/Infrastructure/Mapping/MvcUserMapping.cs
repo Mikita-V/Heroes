@@ -1,11 +1,9 @@
-﻿using BLL.Entities;
-using MVCPL.Models;
-using MVCPL.Util.Helpers;
-using MVCPL.Util.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using BLL.Entities;
+using MVCPL.Models;
+using MVCPL.Util.Extensions;
+using MVCPL.Util.HelperModels;
 
 namespace MVCPL.Infrastructure.Mapping
 {
@@ -23,10 +21,10 @@ namespace MVCPL.Infrastructure.Mapping
                 Id = bllUser.Id,
                 Name = bllUser.Name,
                 BirthDate = bllUser.BirthDate,
-                Photo = (HttpPostedFileBase)MemoryPostedFile.CreateInstance(bllUser.Photo),
+                Photo = MemoryPostedFile.CreateInstance(bllUser.Photo),
                 Rewards = rewards ?? bllUser.Rewards
                     ?.Select(_ => _.ToViewModel())
-                    ?.ToList()
+                    .ToList()
             };
         }
 
@@ -42,10 +40,10 @@ namespace MVCPL.Infrastructure.Mapping
                 Id = user.Id,
                 Name = user.Name,
                 BirthDate = user.BirthDate,
-                Photo = ImageHelper.MapPicture(user.Photo),
+                Photo = user.Photo.ToBytes(),
                 Rewards = rewards ?? user.Rewards
                     ?.Select(_ => _.ToBllModel())
-                    ?.ToList()
+                    .ToList()
             };
         }
     }

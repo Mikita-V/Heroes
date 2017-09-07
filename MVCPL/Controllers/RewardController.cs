@@ -1,44 +1,26 @@
-﻿using System.IO;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using BLL.Entities;
 using BLL.Interface;
-using MVCPL.Util.Helpers;
+using MVCPL.Infrastructure.Mapping;
 using MVCPL.Models;
-using MVCPL.Util.Models;
 
 namespace MVCPL.Controllers
 {
     public class RewardController : Controller
     {
-        private readonly IRewardService rewardService;
-        private readonly IUserService userService;
+        private readonly IRewardService _rewardService;
 
-        public RewardController(IRewardService rewardService, IUserService userService)
+        public RewardController(IRewardService rewardService)
         {
-            this.rewardService = rewardService;
-            this.userService = userService;
+            this._rewardService = rewardService;
         }
 
+        //TODO: Null reference
         public ActionResult Index()
         {
-            var model =
-                rewardService.GetAllRewards()
-                    .Select(r => new RewardViewModel
-                    {
-                        Id = r.Id,
-                        Description = r.Description,
-                        Title = r.Title,
-                        Image = r.Image == null ? null : (HttpPostedFileBase)new MemoryPostedFile(r.Image),
-                        //User = new UserViewModel
-                        //{
-                        //    //fuuuuuuuuuuuuuuuuuuuuuuuuuuuuu
-                        //    Id = userService.GetUserById((int)r.User).Id,
-                        //    Name = userService.GetUserById((int)r.User).Name,
-                        //    BirthDate = userService.GetUserById((int)r.User).BirthDate
-                        //}
-                    }).ToList();
+            var model = _rewardService
+                .GetAllRewards()
+                .Select(_ => _.ToViewModel());
 
             return View(model);
         }
@@ -49,68 +31,60 @@ namespace MVCPL.Controllers
             return View();
         }
 
+        //TODO: Null reference, validation
         [HttpPost]
         public ActionResult Create(RewardViewModel reward)
         {
-            var bllReward = new BllReward
-            {
-                Id = reward.Id,
-                Description = reward.Description,
-                Title = reward.Title
-            };
-            if (reward.Image != null)
-            {
-                bllReward.Image = ImageHelper.MapPicture(reward.Image);
-            }
-
-            rewardService.CreateReward(bllReward);
+            var bllReward = reward.ToBllModel();
+            _rewardService.CreateReward(bllReward);
 
             return RedirectToAction("Index");
         }
 
+        //TODO: Null reference
         [HttpGet]
         public ActionResult Update(int id)
         {
-            var reward = rewardService.GetRewardById(id);
+            var reward = _rewardService
+                .GetRewardById(id)
+                .ToViewModel();
 
-            return View(new RewardViewModel
-            {
-                Id = reward.Id,
-                Description = reward.Description,
-                Title = reward.Title,
-                Image = reward.Image == null ? null : (HttpPostedFileBase)new MemoryPostedFile(reward.Image)
-            });
+            return View(reward);
         }
 
+        //TODO: Null reference
         [HttpPost]
-        public ActionResult Update(RewardViewModel reward, HttpPostedFileBase image)
+        public ActionResult Update(RewardViewModel reward)
         {
-            var bllReward = new BllReward { Id = reward.Id, Description = reward.Description, Title = reward.Title };
-            if (image != null)
+            if (ModelState.IsValid)
             {
-                bllReward.Image = ImageHelper.MapPicture(image);
+                var bllReward = reward.ToBllModel();
+                _rewardService.UpdateReward(bllReward);
+
+                return RedirectToAction("Index");
             }
 
-            rewardService.UpdateReward(bllReward);
-
-            return RedirectToAction("Index");
+            return View(reward);
         }
 
+        //TODO: Null reference
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var reward = rewardService.GetRewardById(id);
+            var reward = _rewardService
+                .GetRewardById(id)
+                .ToViewModel();
 
-            return View(new RewardViewModel { Id = reward.Id, Description = reward.Description, Title = reward.Title, Image = reward.Image == null ? null : (HttpPostedFileBase)new MemoryPostedFile(reward.Image) });
+            return View(reward);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var reward = rewardService.GetRewardById(id);
+            var reward = _rewardService.GetRewardById(id);
             if (reward != null)
             {
-                rewardService.DeleteReward(reward);
+                _rewardService.DeleteReward(reward);
             }
 
             return RedirectToAction("Index");

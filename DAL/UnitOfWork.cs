@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DAL.DTO;
 using DAL.Interface;
 using DAL.Repos;
@@ -12,38 +8,38 @@ namespace DAL
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private bool disposed = false;
-        private readonly DbContext context;
-        private IRepository<DalUser> userRepository;
-        private IRepository<DalReward> rewardRepository;
+        private bool _disposed = false;
+        private readonly DbContext _context;
+        private IRepository<DalUser> _userRepository;
+        private IRepository<DalReward> _rewardRepository;
 
-        public IRepository<DalUser> Users => userRepository ?? (userRepository = new UserRepo(context));
+        public IRepository<DalUser> Users => _userRepository ?? (_userRepository = new UserRepo(_context));
 
-        public IRepository<DalReward> Rewards => rewardRepository ?? (rewardRepository = new RewardRepo(context));
+        public IRepository<DalReward> Rewards => _rewardRepository ?? (_rewardRepository = new RewardRepo(_context));
 
         public UnitOfWork(DbContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public void Commit()
         {
-            context?.SaveChanges();
+            _context?.SaveChanges();
         }
 
         public virtual void Dispose(bool disposing)
         {
-            if (this.disposed)
+            if (this._disposed)
             {
                 return;
             }
 
             if (disposing)
             {
-                context.Dispose();
+                _context.Dispose();
             }
 
-            this.disposed = true;
+            this._disposed = true;
         }
 
         public void Dispose()

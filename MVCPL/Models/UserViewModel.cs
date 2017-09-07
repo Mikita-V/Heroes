@@ -30,7 +30,6 @@ namespace MVCPL.Models
             }
         }
         
-        //[Required]
         public HttpPostedFileBase Photo { get; set; }
 
         public List<RewardViewModel> Rewards { get; set; }

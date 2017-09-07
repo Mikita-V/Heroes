@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using DAL.DTO;
@@ -8,18 +7,19 @@ using ORM.Entities;
 
 namespace DAL.Repos
 {
+    //TODO: Refactor
     public class UserRepo : IRepository<DalUser>
     {
-        private readonly DbContext context;
+        private readonly DbContext _context;
 
         public UserRepo(DbContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public IEnumerable<DalUser> GetAll()
         {
-            var users = context.Set<User>()
+            var users = _context.Set<User>()
                 .Select(user => new DalUser
                 {
                     Id = user.Id,
@@ -44,7 +44,7 @@ namespace DAL.Repos
 
         public DalUser GetById(int id)
         {
-            var user = context.Set<User>().SingleOrDefault(r => r.Id == id);
+            var user = _context.Set<User>().SingleOrDefault(r => r.Id == id);
 
             return new DalUser
             {
@@ -72,25 +72,25 @@ namespace DAL.Repos
                 Name = entity.Name,
                 BirthDate = entity.BirthDate,
                 Photo = entity.Photo,
-                Rewards = context.Set<Reward>()
+                Rewards = _context.Set<Reward>()
                     .Where(r => ids.Contains(r.Id))
                     .ToList()
             };
-            context.Entry(user).State = EntityState.Added;
+            _context.Entry(user).State = EntityState.Added;
         }
 
         public void Update(DalUser entity)
         {
-            var oldRewards = context.Set<Reward>()
+            var oldRewards = _context.Set<Reward>()
                 .Where(_ => _.User.Id == entity.Id)
                 .ToList();
             var ids = entity.Rewards.Select(_ => _.Id);
-            var newRewards = context.Set<Reward>()
+            var newRewards = _context.Set<Reward>()
                 .Where(r => ids.Contains(r.Id))
                 .ToList();
             var addedRewards = newRewards.Except(oldRewards).ToList();
             var removedRewards = oldRewards.Except(newRewards).ToList();
-            var currentUser = context.Set<User>().Single(_ => _.Id == entity.Id);
+            var currentUser = _context.Set<User>().Single(_ => _.Id == entity.Id);
             foreach (var reward in addedRewards)
             {
                 reward.User = currentUser;
@@ -100,7 +100,7 @@ namespace DAL.Repos
             foreach (var reward in removedRewards)
             {
                 reward.User = null;
-                context.Entry(reward).State = EntityState.Modified;
+                _context.Entry(reward).State = EntityState.Modified;
             }
 
 
@@ -113,14 +113,14 @@ namespace DAL.Repos
                 Rewards = newRewards
             };
 
-            context.Entry(currentUser).CurrentValues.SetValues(user);
+            _context.Entry(currentUser).CurrentValues.SetValues(user);
             //context.Entry(user).State = EntityState.Modified;
         }
 
         public void Delete(DalUser entity)
         {
-            var user = context.Set<User>().Single(u => u.Id == entity.Id);
-            context.Entry(user).State = EntityState.Deleted;
+            var user = _context.Set<User>().Single(u => u.Id == entity.Id);
+            _context.Entry(user).State = EntityState.Deleted;
         }
     }
 }

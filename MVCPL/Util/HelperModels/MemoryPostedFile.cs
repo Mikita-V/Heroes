@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Web;
 
-namespace MVCPL.Util.Models
+namespace MVCPL.Util.HelperModels
 {
     public class MemoryPostedFile : HttpPostedFileBase
     {

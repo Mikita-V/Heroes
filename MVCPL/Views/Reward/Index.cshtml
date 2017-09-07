@@ -1,4 +1,5 @@
-﻿@using MVCPL.Util.Helpers
+﻿@using MVCPL.Util.Extensions
+@using MVCPL.Util.HtmlHelpers
 @model IEnumerable<MVCPL.Models.RewardViewModel>
 
 @{
@@ -41,16 +42,8 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @if (item.Image != null)
-                {
-                    @Html.Raw("<img alt=\"...\" height=50 width=50 src=\"data:image/jpeg;base64," + Convert.ToBase64String(ImageHelper.MapPicture(item.Image)) + "\" />")
-                }
-                else
-                {
-                    <img alt="..." height=50 width=50 src="../../img/no-image.jpg" />
-                }
+                @Html.CustomImage(item.Image.ToBase64String(), "...", 50, 50)
             </td>
-
             <td>
                 @Html.ActionLink("Update", "Update", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })

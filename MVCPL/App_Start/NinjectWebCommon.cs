@@ -1,4 +1,4 @@
-﻿using MVCPL.Util.DependencyResolving;
+﻿using MVCPL.Infrastructure.DependencyResolving;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(MVCPL.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(MVCPL.App_Start.NinjectWebCommon), "Stop")]
@@ -8,9 +8,7 @@ namespace MVCPL.App_Start
     using System;
     using System.Web;
     using System.Web.Mvc;
-
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
     using Ninject;
     using Ninject.Web.Common;
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Interface;
+﻿using DAL.Interface;
 
 namespace DAL.DTO
 {
@@ -13,7 +8,6 @@ namespace DAL.DTO
         public string Title { get; set; }
         public string Description { get; set; }
         public byte[] Image { get; set; }
-        //public int? User { get; set; }
         public DalUser User { get; set; }
     }
 }

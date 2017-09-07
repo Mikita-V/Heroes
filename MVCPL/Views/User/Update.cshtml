@@ -1,4 +1,5 @@
-﻿@using MVCPL.Util.Helpers
+﻿@using MVCPL.Util.Extensions
+@using MVCPL.Util.HtmlHelpers
 @model MVCPL.Models.UserViewModel
 
 @{
@@ -37,23 +38,15 @@
 
         <div class="form-group">
             <div>
-                @if (Model.Photo != null)
-                {
-                    //Custom helper
-                    @Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(ImageHelper.MapPicture(@Model.Photo)) + "\" />")
-                }
-                else
-                {
-                    <img src="../../img/no-image.jpg" />
-                }
+                @Html.CustomImage(Model.Photo.ToBase64String(), "...", 150, 150)
             </div>
             @Html.TextBoxFor(model => model.Photo, new { type = "file" })
             @*@Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })*@
-            @*<input type="file" name="photo" />*@
         </div>
         <div class="form-group">
             @if (Model.Rewards != null && Model.Rewards.Any())
             {
+                //TODO: refactor
                 for (int i = 0; i < Model.Rewards.Count; ++i)
                 {
                     var reward = Model.Rewards[i];
@@ -62,9 +55,6 @@
                     @Html.HiddenFor(x => x.Rewards[i].Title)
                     @Html.CheckBoxFor(x => x.Rewards[i].IsSelected)
                     @Html.LabelFor(x => x.Rewards[i].Title, reward.Title)
-                    @*<input type="hidden" name="@Model.Rewards.ElementAt(i).Id" />
-                        <label>@Model.Rewards.ElementAt(i).Title</label>
-                        <input type="checkbox" name="chk" checked="@Model.Rewards.ElementAt(i).IsSelected" />*@
                 }
             }
         </div>

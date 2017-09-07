@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using DAL.DTO;
@@ -8,18 +7,19 @@ using ORM.Entities;
 
 namespace DAL.Repos
 {
+    //TODO: Refactor
     public class RewardRepo : IRepository<DalReward>
     {
-        private readonly DbContext context;
+        private readonly DbContext _context;
 
         public RewardRepo(DbContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public IEnumerable<DalReward> GetAll()
         {
-            var rewards = context.Set<Reward>()
+            var rewards = _context.Set<Reward>()
                 .Select(_ => new DalReward
                 {
                     Id = _.Id,
@@ -36,7 +36,7 @@ namespace DAL.Repos
 
         public DalReward GetById(int id)
         {
-            var reward = context.Set<Reward>().SingleOrDefault(r => r.Id == id);
+            var reward = _context.Set<Reward>().SingleOrDefault(r => r.Id == id);
 
             return new DalReward
             {
@@ -60,12 +60,12 @@ namespace DAL.Repos
                 Image = entity.Image,
                 //User = context.Set<User>().SingleOrDefault(_ => _.Id == entity.User.Id)
             };
-            context.Entry(reward).State = EntityState.Added;
+            _context.Entry(reward).State = EntityState.Added;
         }
 
         public void Update(DalReward entity)
         {
-            var currentReward = context.Set<Reward>().SingleOrDefault(_ => _.Id == entity.Id);
+            var currentReward = _context.Set<Reward>().SingleOrDefault(_ => _.Id == entity.Id);
             var reward = new Reward
             {
                 Id = entity.Id,
@@ -75,13 +75,13 @@ namespace DAL.Repos
                 //User = context.Set<User>().SingleOrDefault(_ => _.Id == entity.User.Id)
             };
             //context.Entry(reward).State = EntityState.Modified;
-            context.Entry(currentReward).CurrentValues.SetValues(reward);
+            _context.Entry(currentReward).CurrentValues.SetValues(reward);
         }
 
         public void Delete(DalReward entity)
         {
-            var reward = context.Set<Reward>().Single(u => u.Id == entity.Id);
-            context.Entry(reward).State = EntityState.Deleted;
+            var reward = _context.Set<Reward>().Single(u => u.Id == entity.Id);
+            _context.Entry(reward).State = EntityState.Deleted;
         }
     }
 }

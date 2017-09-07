@@ -1,16 +1,13 @@
 ﻿using BLL.Entities;
 using MVCPL.Models;
-using MVCPL.Util.Helpers;
-using MVCPL.Util.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using MVCPL.Util.Extensions;
+using MVCPL.Util.HelperModels;
 
 namespace MVCPL.Infrastructure.Mapping
 {
     public static class MvcRewardMapping
     {
+        //TODO: Null reference
         public static RewardViewModel ToViewModel(this BllReward bllReward)
         {
             return new RewardViewModel
@@ -18,12 +15,13 @@ namespace MVCPL.Infrastructure.Mapping
                 Id = bllReward.Id,
                 Title = bllReward.Title,
                 Description = bllReward.Description,
-                Image = (HttpPostedFileBase)MemoryPostedFile.CreateInstance(bllReward.Image),
+                Image = MemoryPostedFile.CreateInstance(bllReward.Image),
                 IsSelected = (bllReward.User != null),
                 User = bllReward.User.ToViewModel(),
             };
         }
 
+        //TODO: Null reference
         public static BllReward ToBllModel(this RewardViewModel reward)
         {
             return new BllReward
@@ -31,7 +29,7 @@ namespace MVCPL.Infrastructure.Mapping
                 Id = reward.Id,
                 Title = reward.Title,
                 Description = reward.Description,
-                Image = ImageHelper.MapPicture(reward.Image),
+                Image = reward.Image.ToBytes(),
                 User = reward.User.ToBllModel(),
             };
         }

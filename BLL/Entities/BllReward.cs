@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BLL.Entities
+﻿namespace BLL.Entities
 {
     public class BllReward
     {
@@ -12,7 +6,6 @@ namespace BLL.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public byte[] Image { get; set; }
-        //public int? User { get; set; }
         public BllUser User { get; set; }
     }
 }

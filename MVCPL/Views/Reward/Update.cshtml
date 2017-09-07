@@ -1,4 +1,5 @@
-﻿@using MVCPL.Util.Helpers
+﻿@using MVCPL.Util.Extensions
+@using MVCPL.Util.HtmlHelpers
 @model MVCPL.Models.RewardViewModel
 
 @{
@@ -38,14 +39,7 @@
 
         <div class="form-group">
             <div>
-                @if (Model.Image != null)
-                {
-                    @Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(ImageHelper.MapPicture(@Model.Image)) + "\" />")
-                }
-                else
-                {
-                    <img src="../../img/no-image.jpg" />
-                }
+                @Html.CustomImage(Model.Image.ToBase64String(), "...", 150, 150)
             </div>
             @Html.TextBoxFor(model => model.Image, new { type = "file" })
         </div>

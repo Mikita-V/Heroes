@@ -1,17 +1,13 @@
-﻿using Ninject;
-using System;
-using System.Collections.Generic;
+﻿
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ninject;
+using Ninject.Web.Common;
 using BLL.Interface;
 using BLL.Services;
 using DAL;
 using DAL.DTO;
 using DAL.Interface;
 using DAL.Repos;
-using Ninject.Web.Common;
 using ORM.Db;
 
 namespace DependencyResolver.Resolving

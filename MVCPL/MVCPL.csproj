@@ -155,11 +155,12 @@
     <Compile Include="Infrastructure\DependencyResolving\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\Mapping\MvcRewardMapping.cs" />
     <Compile Include="Infrastructure\Mapping\MvcUserMapping.cs" />
-    <Compile Include="Util\Helpers\ImageHelper.cs" />
+    <Compile Include="Util\Extensions\HttpPostedFileBaseExtension.cs" />
     <Compile Include="Models\RewardViewModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\Models\MemoryPostedFile.cs" />
+    <Compile Include="Util\HtmlHelpers\CustomHtmlHelpers.cs" />
+    <Compile Include="Util\HelperModels\MemoryPostedFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

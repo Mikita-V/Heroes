@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BLL.Entities;
 using BLL.Interface;
@@ -10,16 +9,16 @@ namespace BLL.Services
 {
     public class RewardService : IRewardService
     {
-        private readonly IUnitOfWork uow;
+        private readonly IUnitOfWork _uow;
 
         public RewardService(IUnitOfWork uow)
         {
-            this.uow = uow;
+            this._uow = uow;
         }
 
         public IEnumerable<BllReward> GetAllRewards()
         {
-            var rewards = uow.Rewards
+            var rewards = _uow.Rewards
                 .GetAll()
                 .Select(_ => _.ToBllModel())
                 .ToList();
@@ -35,8 +34,7 @@ namespace BLL.Services
 
         public BllReward GetRewardById(int id)
         {
-            //Possible nullreferenceexception
-            var reward = uow.Rewards
+            var reward = _uow.Rewards
                 .GetById(id)
                 .ToBllModel();
 
@@ -46,22 +44,22 @@ namespace BLL.Services
         public void CreateReward(BllReward reward)
         {
             var dalReward = reward.ToDalModel();
-            uow.Rewards.Create(dalReward);
-            uow.Commit();
+            _uow.Rewards.Create(dalReward);
+            _uow.Commit();
         }
 
         public void UpdateReward(BllReward reward)
         {
             var dalReward = reward.ToDalModel();
-            uow.Rewards.Update(dalReward);
-            uow.Commit();
+            _uow.Rewards.Update(dalReward);
+            _uow.Commit();
         }
 
         public void DeleteReward(BllReward reward)
         {
             var dalReward = reward.ToDalModel();
-            uow.Rewards.Delete(dalReward);
-            uow.Commit();
+            _uow.Rewards.Delete(dalReward);
+            _uow.Commit();
         }
     }
 }

@@ -123,6 +123,31 @@ namespace MVCPL.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("award-user/{userId:int}_{awardId:int}")]
+        public ActionResult AwardUser(int userId, int awardId)
+        {
+            var user = _userService.GetUserById(userId);
+
+            //TODO: refactor
+            var newReward = _rewardService
+                .GetRewardById(awardId);
+            if (newReward.User?.Id == userId)
+            {
+                object model = "This user already has this award!";
+                return View("AwardError", model);
+            }
+            if (newReward.User != null)
+            {
+                object model = "This award is not vacant!";
+                return View("AwardError", model);
+            }
+
+            user.Rewards = user.Rewards.Concat(new[] { newReward });
+            _userService.UpdateUser(user);
+
+            return RedirectToAction("Index", "User");
+        }
+
         public FileResult DownloadUsers()
         {
             var bytes = _userService.UsersToByteArray();

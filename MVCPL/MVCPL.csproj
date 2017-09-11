@@ -248,9 +248,9 @@
       <Project>{0fcbca2f-772d-466f-abc2-6a929fd1c879}</Project>
       <Name>BLL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DI\DI.csproj">
+    <ProjectReference Include="..\IoC\IoC.csproj">
       <Project>{a3454618-0532-449d-a86c-669702f12690}</Project>
-      <Name>DI</Name>
+      <Name>IoC</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

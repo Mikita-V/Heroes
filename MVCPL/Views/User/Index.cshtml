@@ -1,6 +1,7 @@
-﻿@using MVCPL.Util.Extensions
+﻿@using MVCPL.Models
+@using MVCPL.Util.Extensions
 @using MVCPL.Util.HtmlHelpers
-@model IEnumerable<MVCPL.Models.UserViewModel>
+@model IEnumerable<UserViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -63,3 +64,56 @@
 
     @Html.ActionLink("Download user's list", "DownloadUsers")
 </table>
+
+@*TODO: Refactor*@
+<div>
+    @{
+        <h3>Session Info:</h3>
+        <br />
+
+        var createdUsers = ViewBag.CreatedUsers as List<UserViewModel>;
+        if (createdUsers != null)
+        {
+            <ul>
+                Created Users:
+                @foreach (var user in createdUsers)
+                {
+                    <li>@user.Name / @user.Age</li>
+                }
+            </ul>
+        }
+
+        var updatedUsers = ViewBag.UpdatedUsers as List<UserViewModel>;
+        if (updatedUsers != null)
+        {
+            <ul>
+                Updated Users:
+                @foreach (var user in updatedUsers)
+                {
+                    <li>@user.Name / @user.Age</li>
+                }
+            </ul>
+        }
+
+        var deletedUsers = ViewBag.DeletedUsers as List<int>;
+        if (deletedUsers != null)
+        {
+            <ul>
+                Deleted Users:
+                @foreach (var id in deletedUsers)
+                {
+                    <li>@id</li>
+                }
+            </ul>
+        }
+
+        if (createdUsers != null || updatedUsers != null || deletedUsers != null)
+        {
+            <div>
+                @Html.ActionLink("Apply Changes", "ApplyChanges", new { apply = true }) |
+                @Html.ActionLink("Discard Changes", "ApplyChanges", new { apply = false })
+            </div>
+        }
+
+    }
+</div>

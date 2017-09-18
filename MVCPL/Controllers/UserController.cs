@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using BLL.Interface;
 using MVCPL.Models;
@@ -25,6 +26,11 @@ namespace MVCPL.Controllers
                 .GetAllUsers()
                 .Select(_ => _.ToViewModel());
 
+            //Refactor
+            ViewBag.CreatedUsers = Session["createdUsers"];
+            ViewBag.UpdatedUsers = Session["updatedUsers"];
+            ViewBag.DeletedUsers = Session["deletedUsers"];
+
             return View(model);
         }
 
@@ -40,8 +46,16 @@ namespace MVCPL.Controllers
         [HttpPost]
         public ActionResult Create(UserViewModel user)
         {
-            var bllUser = user.ToBllModel();
-            _userService.CreateUser(bllUser);
+            if (Session["createdUsers"] == null)
+            {
+                Session["createdUsers"] = new List<UserViewModel>();
+            }
+
+            var createdUsers = Session["createdUsers"] as List<UserViewModel>;
+            createdUsers?.Add(user);
+
+            //var bllUser = user.ToBllModel();
+            //_userService.CreateUser(bllUser);
 
             return RedirectToAction("Index");
         }
@@ -67,15 +81,23 @@ namespace MVCPL.Controllers
         [HttpPost]
         public ActionResult Update(UserViewModel user)
         {
+            if (Session["updatedUsers"] == null)
+            {
+                Session["updatedUsers"] = new List<UserViewModel>();
+            }
+
             if (ModelState.IsValid)
             {
-                var selectedRewards = user.Rewards
-                    .Where(_ => _.IsSelected == true)
-                    .Select(_ => _.ToBllModel())
-                    .ToList();
-                var bllUser = user.ToBllModel(selectedRewards);
+                var updatedUsers = Session["updatedUsers"] as List<UserViewModel>;
+                updatedUsers?.Add(user);
 
-                _userService.UpdateUser(bllUser);
+                //var selectedRewards = user.Rewards
+                //    .Where(_ => _.IsSelected == true)
+                //    .Select(_ => _.ToBllModel())
+                //    .ToList();
+                //var bllUser = user.ToBllModel(selectedRewards);
+
+                //_userService.UpdateUser(bllUser);
 
                 return RedirectToAction("Index");
             }
@@ -114,11 +136,19 @@ namespace MVCPL.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var user = _userService.GetUserById(id);
-            if (user != null)
+            if (Session["deletedUsers"] == null)
             {
-                _userService.DeleteUser(user);
+                Session["deletedUsers"] = new List<int>();
             }
+
+            var deletedUsers = Session["deletedUsers"] as List<int>;
+            deletedUsers?.Add(id);
+
+            //var user = _userService.GetUserById(id);
+            //if (user != null)
+            //{
+            //    _userService.DeleteUser(user);
+            //}
 
             return RedirectToAction("Index");
         }
@@ -153,6 +183,61 @@ namespace MVCPL.Controllers
             var bytes = _userService.UsersToByteArray();
 
             return File(bytes, "text", "Users.txt");
+        }
+
+        //TODO: refactor
+        public ActionResult ApplyChanges(bool apply)
+        {
+            if (!apply)
+            {
+                Session["createdUsers"] = null;
+                Session["updatedUsers"] = null;
+                Session["deletedUsers"] = null;
+
+                return RedirectToAction("Index", "User");
+            }
+
+            if (Session["createdUsers"] is List<UserViewModel> createdUsers && createdUsers.Any())
+            {
+                foreach (var user in createdUsers)
+                {
+                    var bllUser = user.ToBllModel();
+                    _userService.CreateUser(bllUser);
+                }
+            }
+
+            if (Session["updatedUsers"] is List<UserViewModel> updatedUsers && updatedUsers.Any())
+            {
+                foreach (var user in updatedUsers)
+                {
+                    var selectedRewards = user.Rewards
+                        .Where(_ => _.IsSelected == true)
+                        .Select(_ => _.ToBllModel())
+                        .ToList();
+                    var bllUser = user.ToBllModel(selectedRewards);
+
+                    _userService.UpdateUser(bllUser);
+                }
+            }
+
+            if (Session["deletedUsers"] is List<int> deletedUsers && deletedUsers.Any())
+            {
+                foreach (var id in deletedUsers)
+                {
+                    var user = _userService.GetUserById(id);
+                    if (user != null)
+                    {
+                        _userService.DeleteUser(user);
+                    }
+                }
+            }
+
+            Session["createdUsers"] = null;
+            Session["updatedUsers"] = null;
+            Session["deletedUsers"] = null;
+
+
+            return RedirectToAction("Index", "User");
         }
     }
 }

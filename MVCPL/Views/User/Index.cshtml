@@ -10,60 +10,17 @@
 
 <h2>Index</h2>
 
-<p>
+@*<p>
     @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Age)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Photo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rewards)
-        </th>
-        <th></th>
-    </tr>
+</p>*@
+@Html.Partial("_CreatePartial", new UserViewModel())
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                @Html.CustomImage(item.Photo.ToBase64String(), "...", 50, 50)
-            </td>
-            @if (item.Rewards != null && item.Rewards.Any())
-            {
-                <td>
-                    @foreach (var reward in item.Rewards)
-                    {
-                        @Html.CustomImageActionLink(reward.Image.ToBase64String(), "...", 50, 50, reward.Title, "Details", "Reward", new { id = reward.Id })
-                    }
-                </td>
-            }
-            else
-            {
-                <td>No rewards yet...</td>
-            }
-            <td>
-                @Html.ActionLink("Edit", "Update", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-    }
-
-    @Html.ActionLink("Download user's list", "DownloadUsers")
-</table>
+@Html.Partial("_UsersTable", Model)
+@Ajax.ActionLink("Update", "Index", new {}, new AjaxOptions{HttpMethod = "GET", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace}, new { @class = "btn btn-lg btn-success" })
+@*<button id="updateUsersTable" class="btn btn-lg btn-success">
+    <i class="glyphicon glyphicon-refresh"></i>
+    Update
+</button>*@
 
 @*TODO: Refactor*@
 <div>
@@ -117,3 +74,7 @@
 
     }
 </div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/ajax")
+}

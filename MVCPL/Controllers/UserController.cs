@@ -31,6 +31,11 @@ namespace MVCPL.Controllers
             ViewBag.UpdatedUsers = Session["updatedUsers"];
             ViewBag.DeletedUsers = Session["deletedUsers"];
 
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_UsersTable", model);
+            }
+
             return View(model);
         }
 
@@ -46,16 +51,21 @@ namespace MVCPL.Controllers
         [HttpPost]
         public ActionResult Create(UserViewModel user)
         {
-            if (Session["createdUsers"] == null)
+            //if (Session["createdUsers"] == null)
+            //{
+            //    Session["createdUsers"] = new List<UserViewModel>();
+            //}
+
+            //var createdUsers = Session["createdUsers"] as List<UserViewModel>;
+            //createdUsers?.Add(user);
+
+            var bllUser = user.ToBllModel();
+            _userService.CreateUser(bllUser);
+
+            if (Request.IsAjaxRequest())
             {
-                Session["createdUsers"] = new List<UserViewModel>();
+                return PartialView("_UserRow", user);
             }
-
-            var createdUsers = Session["createdUsers"] as List<UserViewModel>;
-            createdUsers?.Add(user);
-
-            //var bllUser = user.ToBllModel();
-            //_userService.CreateUser(bllUser);
 
             return RedirectToAction("Index");
         }

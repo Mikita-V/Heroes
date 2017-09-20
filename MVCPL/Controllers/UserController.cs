@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using BLL.Interface;
+using MVCPL.Filters;
 using MVCPL.Models;
 using MVCPL.Infrastructure.Mapping;
 
@@ -49,6 +51,7 @@ namespace MVCPL.Controllers
         //TODO: Null reference, validation
         [Route("create-user")]
         [HttpPost]
+        [ValidateAjax]
         public ActionResult Create(UserViewModel user)
         {
             //if (Session["createdUsers"] == null)
@@ -146,6 +149,21 @@ namespace MVCPL.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Request.IsAjaxRequest())
+            {
+                var user = _userService.GetUserById(id);
+                if (user != null)
+                {
+                    _userService.DeleteUser(user);
+                }
+
+                var model = _userService
+                    .GetAllUsers()
+                    .Select(_ => _.ToViewModel());
+
+                return PartialView("_UsersTable", model);
+            }
+
             if (Session["deletedUsers"] == null)
             {
                 Session["deletedUsers"] = new List<int>();
@@ -153,12 +171,6 @@ namespace MVCPL.Controllers
 
             var deletedUsers = Session["deletedUsers"] as List<int>;
             deletedUsers?.Add(id);
-
-            //var user = _userService.GetUserById(id);
-            //if (user != null)
-            //{
-            //    _userService.DeleteUser(user);
-            //}
 
             return RedirectToAction("Index");
         }

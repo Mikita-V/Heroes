@@ -77,4 +77,50 @@
 
 @section Scripts{
     @Scripts.Render("~/bundles/ajax")
+
+    <script>
+        function editFailed(result) {
+            debugger;
+            $("span[data-valmsg-for]").text('');
+            var errorsInfo = result.responseJSON;
+            for (var i = 0; i < result.responseJSON.length; ++i) {
+                var key = errorsInfo[i].key;
+                var message = "";
+                for (var j = 0; j < errorsInfo[i].errors.length; ++j) {
+                    message += (errorsInfo[i].errors[j] + "; ");
+                }
+
+                $("span[data-valmsg-for='" + key + "']").text(message);
+            }
+        }
+    </script>
+
+    @*<script>
+        $("#btnCreateUser").click(function () {
+
+            var formData = new FormData();
+            var file = document.getElementById("file").files[0];
+            formData.append("Photo", file);
+            formData.append("Name", $('#Name').val());
+            formData.append("BirthDate", $('#BirthDate').val());
+
+            $.ajax({
+                url: '@Url.Action("Create")',
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function (result) {
+                    alert("Error!");
+                    //editFailed(result);
+                },
+                success: function (result) {
+                    alert("Success!");
+                    //editFailed(result);
+                }
+            });
+
+        });
+    </script>*@
 }

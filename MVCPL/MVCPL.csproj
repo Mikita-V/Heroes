@@ -153,6 +153,7 @@
     <Compile Include="Controllers\RewardController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\LogActionFilter.cs" />
+    <Compile Include="Filters\ValidateAjaxAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

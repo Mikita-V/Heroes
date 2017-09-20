@@ -1,7 +1,7 @@
 ﻿@model MVCPL.Models.UserViewModel
     
 @*@using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))*@
-@using (Ajax.BeginForm("Create", new {}, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "usersTableBody", InsertionMode = InsertionMode.InsertAfter }, new { enctype = "multipart/form-data" }))
+@using (Ajax.BeginForm("Create", new {}, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "usersTableBody", InsertionMode = InsertionMode.InsertAfter, OnFailure = "editFailed" }, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -31,7 +31,6 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                @*<button class="btn btn-primary form-control-static col-md-2"></button>*@
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>

@@ -23,34 +23,6 @@
     @foreach (var item in Model)
     {
         @Html.Partial("_UserRow", item)
-        @*<tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                @Html.CustomImage(item.Photo.ToBase64String(), "...", 50, 50)
-            </td>
-            @if (item.Rewards != null && item.Rewards.Any())
-            {
-                <td>
-                    @foreach (var reward in item.Rewards)
-                    {
-                        @Html.CustomImageActionLink(reward.Image.ToBase64String(), "...", 50, 50, reward.Title, "Details", "Reward", new { id = reward.Id })
-                    }
-                </td>
-            }
-            else
-            {
-                <td>No rewards yet...</td>
-            }
-            <td>
-                @Html.ActionLink("Edit", "Update", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>*@
     }
     </tbody>
 

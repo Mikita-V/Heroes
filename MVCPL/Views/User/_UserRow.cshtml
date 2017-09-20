@@ -28,6 +28,6 @@
     <td>
         @Html.ActionLink("Edit", "Update", new { id = Model.Id }) |
         @Html.ActionLink("Delete Safe", "Delete", new { id = Model.Id })
-        @Ajax.ActionLink("Delete", "Delete", new { id = Model.Id }, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace }, new { @class = "btn btn-lg btn-danger" })
+        @Ajax.ActionLink("Delete", "Delete", new { id = Model.Id }, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace, Confirm = "Are you sure?"}, new { @class = "btn btn-lg btn-danger" })
     </td>
 </tr>

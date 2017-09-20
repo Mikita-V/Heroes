@@ -12,7 +12,7 @@ namespace MVCPL.Models
         public int Id  { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(50, ErrorMessage = "Maximum lenght is 50 charasters")]
         [DisplayName("Full Name")]
         public string Name { get; set; }
 

@@ -28,7 +28,7 @@ namespace MVCPL.Filters
                     Data = errorModel
                 };
 
-                filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                //filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
         }
     }

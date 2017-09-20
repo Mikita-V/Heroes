@@ -8,7 +8,8 @@ namespace MVCPL
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery")
-                .Include("~/Scripts/jquery-{version}.js"));
+                .Include("~/Scripts/jquery-{version}.js")
+                .Include("~/Scripts/jquery.form.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ajax")
                 .Include("~/Scripts/jquery.unobtrusive*"));

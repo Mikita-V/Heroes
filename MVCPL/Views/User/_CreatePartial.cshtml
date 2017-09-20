@@ -1,7 +1,7 @@
 ﻿@model MVCPL.Models.UserViewModel
-    
-@*@using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))*@
-@using (Ajax.BeginForm("Create", new {}, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "usersTableBody", InsertionMode = InsertionMode.InsertAfter, OnFailure = "editFailed" }, new { enctype = "multipart/form-data" }))
+
+@*@using (Ajax.BeginForm("Create", new {}, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "usersTableBody", InsertionMode = InsertionMode.InsertAfter, OnFailure = "editFailed" }, new { enctype = "multipart/form-data" }))*@    
+@using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "formid" }))
 {
     @Html.AntiForgeryToken()
 
@@ -21,7 +21,7 @@
             @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -31,7 +31,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input onclick="editFailed" type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>

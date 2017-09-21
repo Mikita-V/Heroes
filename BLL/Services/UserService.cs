@@ -37,6 +37,37 @@ namespace BLL.Services
             return user;
         }
 
+        //TODO: refactor; add method to Repo
+        public IEnumerable<BllUser> GetUserByName(string name)
+        {
+            IEnumerable<BllUser> users = null;
+            if (name.Length == 1)
+            {
+                users = _uow.Users
+                    .GetAll()
+                    .Where(_ => _.Name[0].ToString() == name)
+                    .Select(_ => _.ToBllModel());
+            }
+            else if (name.Contains("_"))
+            {
+                users = new List<BllUser>{_uow.Users
+                    .GetAll()
+                    .Where(_ => _.Name == name.Replace('_', ' '))
+                    .OrderByDescending(_ => _.BirthDate)
+                    .First()
+                    .ToBllModel() };
+            }
+            else
+            {
+                users = _uow.Users
+                    .GetAll()
+                    .Where(_ => _.Name.StartsWith(name) || _.Name.EndsWith(name))
+                    .Select(_ => _.ToBllModel());
+            }
+
+            return users;
+        }
+
         public void CreateUser(BllUser user)
         {
             var dalUser = user.ToDalModel();

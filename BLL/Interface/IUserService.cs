@@ -7,6 +7,7 @@ namespace BLL.Interface
     {
         IEnumerable<BllUser> GetAllUsers();
         BllUser GetUserById(int id);
+        IEnumerable<BllUser> GetUserByName(string name);
         void CreateUser(BllUser user);
         void UpdateUser(BllUser user);
         void DeleteUser(BllUser user);

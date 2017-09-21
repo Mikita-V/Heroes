@@ -22,11 +22,16 @@ namespace MVCPL.Controllers
 
         //TODO: Null reference
         [Route("users")]
-        public ActionResult Index()
+        [Route("users/{searchKey}")]
+        public ActionResult Index(string searchKey)
         {
-            var model = _userService
-                .GetAllUsers()
-                .Select(_ => _.ToViewModel());
+            var model = searchKey == null
+                ? _userService
+                    .GetAllUsers()
+                    .Select(_ => _.ToViewModel())
+                : _userService
+                    .GetUserByName(searchKey)
+                    .Select(_ => _.ToViewModel());
 
             //Refactor
             ViewBag.CreatedUsers = Session["createdUsers"];

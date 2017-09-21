@@ -8,27 +8,51 @@
     //Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-<h2>Index</h2>
+<div style="margin-top: 15px; margin-bottom: 15px;">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Create User</button>
+    @Html.ActionLink("Download user's list", "DownloadUsers", new { }, new { @class = "btn btn-info" })
+</div>
 
-@*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>*@
-@Html.Partial("_CreatePartial", new UserViewModel())
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_CreatePartial", new UserViewModel())
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 
 @Html.Partial("_UsersTable", Model)
-@Ajax.ActionLink("Update", "Index", new {}, new AjaxOptions{HttpMethod = "GET", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace}, new { @class = "btn btn-lg btn-success" })
-@*<button id="updateUsersTable" class="btn btn-lg btn-success">
-    <i class="glyphicon glyphicon-refresh"></i>
-    Update
-</button>*@
+@Ajax.ActionLink("Update", "Index", new { }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace }, new { @class = "btn btn-lg btn-success" })
+
 
 @*TODO: Refactor*@
 <div>
     @{
-        <h3>Session Info:</h3>
-        <br />
-
         var createdUsers = ViewBag.CreatedUsers as List<UserViewModel>;
+        var updatedUsers = ViewBag.UpdatedUsers as List<UserViewModel>;
+        var deletedUsers = ViewBag.DeletedUsers as List<int>;
+        var isSessionEmpty = createdUsers == null && updatedUsers == null && deletedUsers == null;
+
+        if (!isSessionEmpty)
+        {
+            <h3>Session Info:</h3>
+            <br />
+        }
+
         if (createdUsers != null)
         {
             <ul>
@@ -40,7 +64,6 @@
             </ul>
         }
 
-        var updatedUsers = ViewBag.UpdatedUsers as List<UserViewModel>;
         if (updatedUsers != null)
         {
             <ul>
@@ -52,7 +75,6 @@
             </ul>
         }
 
-        var deletedUsers = ViewBag.DeletedUsers as List<int>;
         if (deletedUsers != null)
         {
             <ul>
@@ -64,7 +86,7 @@
             </ul>
         }
 
-        if (createdUsers != null || updatedUsers != null || deletedUsers != null)
+        if (!isSessionEmpty)
         {
             <div>
                 @Html.ActionLink("Apply Changes", "ApplyChanges", new { apply = true }) |
@@ -80,6 +102,8 @@
 
     <script>
         function editFailed(result) {
+            $('#myModal').modal('hide');
+
             //$("span[data-valmsg-for]").text('');
             var errorsInfo = result;
             for (var i = 0; i < result.length; ++i) {
@@ -93,7 +117,7 @@
             }
         }
     </script>
-    
+
     <script type="text/javascript">
         //TODO: refactor
         $('#formid').ajaxForm(function (data) {
@@ -107,32 +131,41 @@
 
     </script>
 
-    @*<script>
-        $("#btnCreateUser").click(function () {
-
-            var formData = new FormData();
-            var file = document.getElementById("file").files[0];
-            formData.append("Photo", file);
-            formData.append("Name", $('#Name').val());
-            formData.append("BirthDate", $('#BirthDate').val());
-
-            $.ajax({
-                url: '@Url.Action("Create")',
-                type: "POST",
-                dataType: "JSON",
-                data: formData,
-                contentType: false,
-                processData: false,
-                error: function (result) {
-                    alert("Error!");
-                    //editFailed(result);
-                },
-                success: function (result) {
-                    alert("Success!");
-                    //editFailed(result);
-                }
-            });
-
+    <script>
+        $('#btnCreateUser').submit(function (e) {
+            debugger;
+            e.preventDefault();
+            $('#myModal').modal('hide');
+            return true;
         });
-    </script>*@
+    </script>
+
+    @*<script>
+            $("#btnCreateUser").click(function () {
+
+                var formData = new FormData();
+                var file = document.getElementById("file").files[0];
+                formData.append("Photo", file);
+                formData.append("Name", $('#Name').val());
+                formData.append("BirthDate", $('#BirthDate').val());
+
+                $.ajax({
+                    url: '@Url.Action("Create")',
+                    type: "POST",
+                    dataType: "JSON",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    error: function (result) {
+                        alert("Error!");
+                        //editFailed(result);
+                    },
+                    success: function (result) {
+                        alert("Success!");
+                        //editFailed(result);
+                    }
+                });
+
+            });
+        </script>*@
 }

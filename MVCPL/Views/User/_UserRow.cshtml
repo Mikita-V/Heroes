@@ -26,8 +26,8 @@
         <td>No rewards yet...</td>
     }
     <td>
-        @Html.ActionLink("Edit", "Update", new { id = Model.Id }) |
-        @Html.ActionLink("Delete Safe", "Delete", new { id = Model.Id })
-        @Ajax.ActionLink("Delete", "Delete", new { id = Model.Id }, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace, Confirm = "Are you sure?"}, new { @class = "btn btn-lg btn-danger" })
+        @Html.ActionLink("Edit", "Update", new { id = Model.Id }, new { @class = "btn btn-warning" })
+        @Html.ActionLink("Delete Safe", "Delete", new { id = Model.Id }, new { @class = "btn btn-warning" })
+        @Ajax.ActionLink("Delete", "Delete", new { id = Model.Id }, new AjaxOptions{ HttpMethod = "POST", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace, Confirm = "Are you sure?"}, new { @class = "btn btn-danger" })
     </td>
 </tr>

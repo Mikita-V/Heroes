@@ -17,13 +17,15 @@ namespace MVCPL.Util.HtmlHelpers
             return MvcHtmlString.Create(sb.ToString());
         }
 
-        public static IHtmlString CustomImageActionLink(this HtmlHelper htmlHelper, string image, string alt, int width, int height, 
+        public static IHtmlString CustomImageActionLink(this HtmlHelper htmlHelper, int userId, string image, string alt, int width, int height, 
             string tooltip, string action, string controller, object routeValues)
         {
+            //TODO: Refactor
             var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
             var url = urlHelper.Action(action, controller, routeValues);
             var sb = new StringBuilder();
-            sb.AppendFormat("<a href={0}>", url);
+            //sb.AppendFormat("<a onclick=rewardDetails({0}) href={1}>", userId, url);
+            sb.AppendFormat("<a onclick=rewardDetails({0}) href=#>", userId, url);
             var src = image != null ? $"data:image/jpeg;base64,{image}" : "../../img/no-image.jpg";
             var dataToggle = "tooltip";
             sb.AppendFormat("<img alt={0} data-toggle={1} title={2}  width={3} height={4} src={5} ", alt, dataToggle, tooltip, width, height, src);

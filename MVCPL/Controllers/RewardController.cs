@@ -80,6 +80,11 @@ namespace MVCPL.Controllers
                 .GetRewardById(id)
                 .ToViewModel();
 
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_DetailsPartial", reward);
+            }
+
             return View(reward);
         }
 

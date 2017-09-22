@@ -17,7 +17,8 @@
         <td>
             @foreach (var reward in Model.Rewards)
             {
-                @Html.CustomImageActionLink(reward.Image.ToBase64String(), "...", 50, 50, reward.Title, "Details", "Reward", new { id = reward.Id })
+                //TODO: Modal window Link
+                @Html.CustomImageActionLink(reward.Id, reward.Image.ToBase64String(), "...", 50, 50, reward.Title, "Details", "Reward", new { id = reward.Id })
             }
         </td>
     }

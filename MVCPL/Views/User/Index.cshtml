@@ -120,4 +120,19 @@
             });
         }
     </script>
+
+    <script>
+        function rewardDetails(rewardId) {
+            $.ajax({
+                url: 'award/' + rewardId,
+                success: function (data) {
+                    $('#rewardWrapper').html(data);
+                    $('#rewardDetailsModal').modal();
+                },
+                error: function (error) {
+                    alert('Error!');
+                }
+            });
+        }
+    </script>
 }

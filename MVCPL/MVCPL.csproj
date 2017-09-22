@@ -211,7 +211,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Content\site.css" />
     <Content Include="img\back-end.png" />
     <Content Include="img\Christine.jpg" />
     <Content Include="img\database.png" />
@@ -220,6 +220,7 @@
     <Content Include="img\full-stack.png" />
     <Content Include="img\jack.png" />
     <Content Include="img\Joe.png" />
+    <Content Include="img\lg.circle-dot-preloader.gif" />
     <Content Include="img\no-image.jpg" />
     <Content Include="img\ux.png" />
     <Content Include="Scripts\bootstrap.js" />

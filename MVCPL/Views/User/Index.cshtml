@@ -135,4 +135,16 @@
             });
         }
     </script>
+
+    <script>
+        jQuery.ajaxSetup({
+            beforeSend: function () {
+                $('#loaderImage').show();
+            },
+            complete: function () {
+                $('#loaderImage').hide();
+            },
+            success: function () { }
+        });
+    </script>
 }

@@ -47,3 +47,15 @@ textarea {
 .container .text-muted {
   margin: 20px 0;
 }
+
+#loaderImage {
+    display: none;
+    position: fixed;
+    background-image: url(../img/lg.circle-dot-preloader.gif);
+    width: 208px;
+    height: 208px;
+    top: 50%;
+    left: 50%;
+    margin-top: -104px;
+    margin-left: -104px;
+}

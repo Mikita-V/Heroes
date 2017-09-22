@@ -72,6 +72,7 @@ namespace MVCPL.Controllers
 
             if (Request.IsAjaxRequest())
             {
+                //Get user from database or generate ID as GUID
                 return PartialView("_UserRow", user);
             }
 
@@ -91,31 +92,41 @@ namespace MVCPL.Controllers
                 .GetUserById(id)
                 .ToViewModel(possibleRewards);
 
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_EditPartial", model);
+            }
+
             return View(model);
         }
 
-        //TODO: Null reference
+        //TODO: Separate session and non-session logic
         [Route("user/{id:int}/edit")]
         [HttpPost]
         public ActionResult Update(UserViewModel user)
         {
-            if (Session["updatedUsers"] == null)
-            {
-                Session["updatedUsers"] = new List<UserViewModel>();
-            }
+            //if (Session["updatedUsers"] == null)
+            //{
+            //    Session["updatedUsers"] = new List<UserViewModel>();
+            //}
 
             if (ModelState.IsValid)
             {
-                var updatedUsers = Session["updatedUsers"] as List<UserViewModel>;
-                updatedUsers?.Add(user);
+                //var updatedUsers = Session["updatedUsers"] as List<UserViewModel>;
+                //updatedUsers?.Add(user);
 
-                //var selectedRewards = user.Rewards
-                //    .Where(_ => _.IsSelected == true)
-                //    .Select(_ => _.ToBllModel())
-                //    .ToList();
-                //var bllUser = user.ToBllModel(selectedRewards);
+                var selectedRewards = user.Rewards
+                    .Where(_ => _.IsSelected == true)
+                    .Select(_ => _.ToBllModel())
+                    .ToList();
+                var bllUser = user.ToBllModel(selectedRewards);
 
-                //_userService.UpdateUser(bllUser);
+                _userService.UpdateUser(bllUser);
+
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(user);
+                }
 
                 return RedirectToAction("Index");
             }
@@ -150,6 +161,7 @@ namespace MVCPL.Controllers
             return View(model);
         }
 
+        //TODO: Separate session and non-session logic
         [Route("user/{id:int}/delete")]
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)

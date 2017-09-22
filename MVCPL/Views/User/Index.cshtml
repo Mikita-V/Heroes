@@ -8,33 +8,14 @@
     //Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
+@*TODO: Refactor*@
 <div style="margin-top: 15px; margin-bottom: 15px;">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Create User</button>
     @Html.ActionLink("Download user's list", "DownloadUsers", new { }, new { @class = "btn btn-info" })
 </div>
 
 
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
-            </div>
-            <div class="modal-body">
-                @Html.Partial("_CreatePartial", new UserViewModel())
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
+@Html.Partial("_CreatePartial", new UserViewModel())
 @Html.Partial("_UsersTable", Model)
 @Ajax.ActionLink("Update", "Index", new { }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace }, new { @class = "btn btn-lg btn-success" })
 
@@ -100,72 +81,43 @@
 @section Scripts{
     @Scripts.Render("~/bundles/ajax")
 
+    @*TODO: refactor*@
     <script>
         function editFailed(result) {
-            $('#myModal').modal('hide');
-
-            //$("span[data-valmsg-for]").text('');
             var errorsInfo = result;
             for (var i = 0; i < result.length; ++i) {
                 var key = errorsInfo[i].key;
                 var message = errorsInfo[i].errors[0];
-                //for (var j = 0; j < errorsInfo[i].errors.length; ++j) {
-                //    message += (errorsInfo[i].errors[j] + "; ");
-                //}
-
                 $("span[data-valmsg-for='" + key + "']").text(message);
             }
         }
     </script>
 
     <script type="text/javascript">
-        //TODO: refactor
         $('#formid').ajaxForm(function (data) {
+            debugger;
             $("span[data-valmsg-for]").text('');
             if (typeof data === 'string') {
                 $('#usersTableBody').append(data);
+                $('#myModal').modal('hide');
             } else {
                 editFailed(data);
             }
         });
-
     </script>
 
     <script>
-        $('#btnCreateUser').submit(function (e) {
-            debugger;
-            e.preventDefault();
-            $('#myModal').modal('hide');
-            return true;
-        });
-    </script>
-
-    @*<script>
-            $("#btnCreateUser").click(function () {
-
-                var formData = new FormData();
-                var file = document.getElementById("file").files[0];
-                formData.append("Photo", file);
-                formData.append("Name", $('#Name').val());
-                formData.append("BirthDate", $('#BirthDate').val());
-
-                $.ajax({
-                    url: '@Url.Action("Create")',
-                    type: "POST",
-                    dataType: "JSON",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    error: function (result) {
-                        alert("Error!");
-                        //editFailed(result);
-                    },
-                    success: function (result) {
-                        alert("Success!");
-                        //editFailed(result);
-                    }
-                });
-
+        function editUser(userId) {
+            $.ajax({
+                url: 'user/' + userId + '/edit',
+                success: function (data) {
+                    $('#modalWrapper').html(data);
+                    $('#editModal').modal();
+                },
+                error: function (error) {
+                    alert('Error!');
+                }
             });
-        </script>*@
+        }
+    </script>
 }

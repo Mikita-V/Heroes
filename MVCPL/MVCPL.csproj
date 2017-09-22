@@ -295,6 +295,7 @@
     <Content Include="Views\User\_UsersTable.cshtml" />
     <Content Include="Views\User\_CreatePartial.cshtml" />
     <Content Include="Views\User\_UserRow.cshtml" />
+    <Content Include="Views\User\_EditPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

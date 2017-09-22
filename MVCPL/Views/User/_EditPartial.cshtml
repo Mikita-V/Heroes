@@ -1,0 +1,96 @@
+﻿@using MVCPL.Util.Extensions
+@using MVCPL.Util.HtmlHelpers
+@model MVCPL.Models.UserViewModel
+
+<div class="modal fade" id="editModal" @*role="dialog"*@>
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+
+
+@using (Html.BeginForm("Update", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "editFormId" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>UserViewModel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                @Html.CustomImage(Model.Photo.ToBase64String(), "...", 150, 150)
+            </div>
+            @Html.TextBoxFor(model => model.Photo, new { type = "file" })
+            @*@Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })*@
+        </div>
+        <div class="form-group">
+            @if (Model.Rewards != null && Model.Rewards.Any())
+            {
+                //TODO: refactor
+                for (int i = 0; i < Model.Rewards.Count; ++i)
+                {
+                    var reward = Model.Rewards[i];
+                    @Html.HiddenFor(x => x.Rewards[i].Id)
+                    @Html.HiddenFor(x => x.Rewards[i].Description)
+                    @Html.HiddenFor(x => x.Rewards[i].Title)
+                    @Html.CheckBoxFor(x => x.Rewards[i].IsSelected)
+                    @Html.LabelFor(x => x.Rewards[i].Title, reward.Title)
+                }
+            }
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" @*data-dismiss="modal"*@ class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@*For Ajax Edit - to be implemented*@
+
+@*<script type="text/javascript">
+        $('#editFormId').ajaxForm(function (data) {
+            debugger;
+            $("span[data-valmsg-for]").text('');
+            if (typeof data === 'string') {
+                $('#usersTableBody').append(data);
+            } else {
+                editFailed(data);
+            }
+        });
+</script>*@

@@ -281,17 +281,13 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\Reward\Index.cshtml" />
     <Content Include="Views\Reward\Delete.cshtml" />
-    <Content Include="Views\User\Update.cshtml" />
-    <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\Reward\Create.cshtml" />
     <Content Include="Views\Reward\Update.cshtml" />
     <Content Include="Views\Shared\_UserLayout.cshtml" />
     <Content Include="Views\Shared\_RewardLayout.cshtml" />
     <Content Include="Views\Reward\Details.cshtml" />
-    <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\User\AwardError.cshtml" />
     <Content Include="Views\User\_UsersTable.cshtml" />
     <Content Include="Views\User\_CreatePartial.cshtml" />

@@ -46,15 +46,8 @@ namespace MVCPL.Controllers
             return View(model);
         }
 
-        [Route("create-user")]
-        [HttpGet]
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         //TODO: Null reference, validation
-        [Route("create-user")]
+        //[Route("create-user")]
         [HttpPost]
         [ValidateAjax]
         public ActionResult Create(UserViewModel user)
@@ -134,37 +127,10 @@ namespace MVCPL.Controllers
             return View(user);
         }
 
-        [Route("user/{id:int}")]
-        [HttpGet]
-        public ActionResult Details(int id)
-        {
-            var possibleRewards = _rewardService
-                .GetAllPossibleRewards(id)
-                .Select(_ => _.ToViewModel())
-                .ToList();
-            var model = _userService
-                .GetUserById(id)
-                .ToViewModel(possibleRewards);
-
-            return View(model);
-        }
-
-        //TODO: Null reference
-        [Route("user/{id:int}/delete")]
-        [HttpGet]
-        public ActionResult Delete(int id)
-        {
-            var model = _userService
-                .GetUserById(id)
-                .ToViewModel();
-
-            return View(model);
-        }
-
         //TODO: Separate session and non-session logic
         [Route("user/{id:int}/delete")]
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public ActionResult Delete(int id)
         {
             if (Request.IsAjaxRequest())
             {
@@ -278,5 +244,39 @@ namespace MVCPL.Controllers
 
             return RedirectToAction("Index", "User");
         }
+
+        //[Route("create-user")]
+        //[HttpGet]
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
+
+        //[Route("user/{id:int}")]
+        //[HttpGet]
+        //public ActionResult Details(int id)
+        //{
+        //    var possibleRewards = _rewardService
+        //        .GetAllPossibleRewards(id)
+        //        .Select(_ => _.ToViewModel())
+        //        .ToList();
+        //    var model = _userService
+        //        .GetUserById(id)
+        //        .ToViewModel(possibleRewards);
+
+        //    return View(model);
+        //}
+
+        ////TODO: Null reference
+        //[Route("user/{id:int}/delete")]
+        //[HttpGet]
+        //public ActionResult Delete(int id)
+        //{
+        //    var model = _userService
+        //        .GetUserById(id)
+        //        .ToViewModel();
+
+        //    return View(model);
+        //}
     }
 }

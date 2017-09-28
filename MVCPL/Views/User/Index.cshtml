@@ -3,11 +3,10 @@
 
 @{
     ViewBag.Title = "Index";
-    //Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
 @*TODO: Refactor*@
-<div style="margin-top: 15px; margin-bottom: 15px;">
+<div class="margin-top-bottom">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Create User</button>
     @Html.ActionLink("Download user's list", "DownloadUsers", new { }, new { @class = "btn btn-info" })
 </div>
@@ -78,71 +77,5 @@
 
 @section Scripts{
     @Scripts.Render("~/bundles/ajax")
-
-    @*TODO: refactor*@
-    <script>
-        function editFailed(result) {
-            var errorsInfo = result;
-            for (var i = 0; i < result.length; ++i) {
-                var key = errorsInfo[i].key;
-                var message = errorsInfo[i].errors[0];
-                $("span[data-valmsg-for='" + key + "']").text(message);
-            }
-        }
-    </script>
-
-    <script type="text/javascript">
-        $('#formid').ajaxForm(function (data) {
-            debugger;
-            $("span[data-valmsg-for]").text('');
-            if (typeof data === 'string') {
-                $('#usersTableBody').append(data);
-                $('#myModal').modal('hide');
-            } else {
-                editFailed(data);
-            }
-        });
-    </script>
-
-    <script>
-        function editUser(userId) {
-            $.ajax({
-                url: 'user/' + userId + '/edit',
-                success: function (data) {
-                    $('#modalWrapper').html(data);
-                    $('#editModal').modal();
-                },
-                error: function (error) {
-                    alert('Error!');
-                }
-            });
-        }
-    </script>
-
-    <script>
-        function rewardDetails(rewardId) {
-            $.ajax({
-                url: 'award/' + rewardId,
-                success: function (data) {
-                    $('#rewardWrapper').html(data);
-                    $('#rewardDetailsModal').modal();
-                },
-                error: function (error) {
-                    alert('Error!');
-                }
-            });
-        }
-    </script>
-
-    <script>
-        jQuery.ajaxSetup({
-            beforeSend: function () {
-                $('#loaderImageContainer').show();
-            },
-            complete: function () {
-                $('#loaderImageContainer').hide();
-            },
-            success: function () { }
-        });
-    </script>
+    @Scripts.Render("~/bundles/custom")
 }

@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - People & Rewards</title>
+    <title>@ViewBag.Title - Heroes</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/custom")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -33,7 +34,7 @@
         @RenderBody()
     </main>
     <footer class="footer">
-        <p class="text-center">&copy; @DateTime.Now.Year - People & Rewards</p>
+        <p class="text-center">&copy; @DateTime.Now.Year - Heroes</p>
     </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

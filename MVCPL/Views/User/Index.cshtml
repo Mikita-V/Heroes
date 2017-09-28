@@ -1,6 +1,4 @@
 ﻿@using MVCPL.Models
-@using MVCPL.Util.Extensions
-@using MVCPL.Util.HtmlHelpers
 @model IEnumerable<UserViewModel>
 
 @{
@@ -139,10 +137,10 @@
     <script>
         jQuery.ajaxSetup({
             beforeSend: function () {
-                $('#loaderImage').show();
+                $('#loaderImageContainer').show();
             },
             complete: function () {
-                $('#loaderImage').hide();
+                $('#loaderImageContainer').hide();
             },
             success: function () { }
         });

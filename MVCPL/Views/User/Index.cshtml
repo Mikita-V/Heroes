@@ -12,7 +12,7 @@
 </div>
 
 
-@Html.Partial("_CreatePartial", new UserViewModel())
+@Html.Partial("_CreatePartial", new UserViewModel { BirthDate = DateTime.Now })
 @Html.Partial("_UsersTable", Model)
 @Ajax.ActionLink("Update", "Index", new { }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace }, new { @class = "btn btn-lg btn-success" })
 

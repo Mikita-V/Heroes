@@ -18,6 +18,8 @@ namespace MVCPL.Models
 
         [Required]
         [DisplayName("Date of Birth")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime BirthDate { get; set; }
 
         [Range(0, 150)]

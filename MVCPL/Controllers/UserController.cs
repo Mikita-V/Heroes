@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using BLL.Interface;
@@ -9,6 +8,7 @@ using MVCPL.Infrastructure.Mapping;
 
 namespace MVCPL.Controllers
 {
+    //TODO: Separate session and non-session logic
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -20,11 +20,11 @@ namespace MVCPL.Controllers
             this._rewardService = rewardService;
         }
 
-        //TODO: Null reference
         [Route("users")]
         [Route("users/{searchKey}")]
         public ActionResult Index(string searchKey)
         {
+            //TODO: null reference
             var model = searchKey == null
                 ? _userService
                     .GetAllUsers()
@@ -33,7 +33,7 @@ namespace MVCPL.Controllers
                     .GetUserByName(searchKey)
                     .Select(_ => _.ToViewModel());
 
-            //Refactor
+            //TODO: Refactor
             ViewBag.CreatedUsers = Session["createdUsers"];
             ViewBag.UpdatedUsers = Session["updatedUsers"];
             ViewBag.DeletedUsers = Session["deletedUsers"];
@@ -46,37 +46,52 @@ namespace MVCPL.Controllers
             return View(model);
         }
 
-        //TODO: Null reference, validation
-        //[Route("create-user")]
         [HttpPost]
         [ValidateAjax]
         public ActionResult Create(UserViewModel user)
         {
-            //if (Session["createdUsers"] == null)
-            //{
-            //    Session["createdUsers"] = new List<UserViewModel>();
-            //}
-
-            //var createdUsers = Session["createdUsers"] as List<UserViewModel>;
-            //createdUsers?.Add(user);
-
-            var bllUser = user.ToBllModel();
-            _userService.CreateUser(bllUser);
-
-            if (Request.IsAjaxRequest())
+            if (ModelState.IsValid)
             {
-                //Get user from database or generate ID as GUID
-                return PartialView("_UserRow", user);
+                var bllUser = user.ToBllModel();
+                _userService.CreateUser(bllUser);
+
+                if (Request.IsAjaxRequest())
+                {
+                    //TODO: Get user from database or generate ID as GUID
+                    return PartialView("_UserRow", user);
+                }
             }
 
+            //TODO: different behavior if model is not valid
             return RedirectToAction("Index");
+
+            //if (ModelState.IsValid)
+            //{
+            //    if (Session["createdUsers"] == null)
+            //    {
+            //        Session["createdUsers"] = new List<UserViewModel>();
+            //    }
+
+            //    var createdUsers = Session["createdUsers"] as List<UserViewModel>;
+            //    createdUsers?.Add(user);
+
+            //    if (Request.IsAjaxRequest())
+            //    {
+            //        ////TODO: Get user from database or generate ID as GUID
+            //        //return PartialView("_UserRow", user);
+            //    }
+            //}
+
+            ////TODO: different behavior if model is not valid
+            //return RedirectToAction("Index");
         }
 
-        //TODO: Null reference
+        //TODO: make ajax-only
         [Route("user/{id:int}/edit")]
         [HttpGet]
         public ActionResult Update(int id)
         {
+            //TODO: null reference
             var possibleRewards = _rewardService
                 .GetAllPossibleRewards(id)
                 .Select(_ => _.ToViewModel())
@@ -85,77 +100,69 @@ namespace MVCPL.Controllers
                 .GetUserById(id)
                 .ToViewModel(possibleRewards);
 
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("_EditPartial", model);
-            }
-
-            return View(model);
+            return PartialView("_EditPartial", model);
         }
 
-        //TODO: Separate session and non-session logic
         [Route("user/{id:int}/edit")]
         [HttpPost]
         public ActionResult Update(UserViewModel user)
         {
-            //if (Session["updatedUsers"] == null)
-            //{
-            //    Session["updatedUsers"] = new List<UserViewModel>();
-            //}
-
             if (ModelState.IsValid)
             {
-                //var updatedUsers = Session["updatedUsers"] as List<UserViewModel>;
-                //updatedUsers?.Add(user);
-
+                //TODO: null reference
                 var selectedRewards = user.Rewards
-                    .Where(_ => _.IsSelected == true)
+                    .Where(_ => _.IsSelected)
                     .Select(_ => _.ToBllModel())
                     .ToList();
                 var bllUser = user.ToBllModel(selectedRewards);
-
                 _userService.UpdateUser(bllUser);
-
-                if (Request.IsAjaxRequest())
-                {
-                    return Json(user);
-                }
-
-                return RedirectToAction("Index");
             }
 
-            return View(user);
+            //TODO: different behavior if model is not valid
+            return RedirectToAction("Index");
+
+            //if (ModelState.IsValid)
+            //{
+            //    if (Session["updatedUsers"] == null)
+            //    {
+            //        Session["updatedUsers"] = new List<UserViewModel>();
+            //    }
+
+            //    var updatedUsers = Session["updatedUsers"] as List<UserViewModel>;
+            //    updatedUsers?.Add(user);
+            //}
+
+            ////TODO: different behavior if model is not valid
+            //return RedirectToAction("Index");
         }
 
-        //TODO: Separate session and non-session logic
+        //TODO: make ajax-only
         [Route("user/{id:int}/delete")]
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            if (Request.IsAjaxRequest())
+            var user = _userService.GetUserById(id);
+            if (user != null)
             {
-                var user = _userService.GetUserById(id);
-                if (user != null)
-                {
-                    _userService.DeleteUser(user);
-                }
-
-                var model = _userService
-                    .GetAllUsers()
-                    .Select(_ => _.ToViewModel());
-
-                return PartialView("_UsersTable", model);
+                _userService.DeleteUser(user);
             }
 
-            if (Session["deletedUsers"] == null)
-            {
-                Session["deletedUsers"] = new List<int>();
-            }
+            var model = _userService
+                .GetAllUsers()
+                .Select(_ => _.ToViewModel());
 
-            var deletedUsers = Session["deletedUsers"] as List<int>;
-            deletedUsers?.Add(id);
+            return PartialView("_UsersTable", model);
 
-            return RedirectToAction("Index");
+            //if (Session["deletedUsers"] == null)
+            //{
+            //    Session["deletedUsers"] = new List<int>();
+            //}
+
+            //var deletedUsers = Session["deletedUsers"] as List<int>;
+            //deletedUsers?.Add(id);
+
+            ////TODO: Update session table here
+            //return RedirectToAction("Index");
         }
 
         [Route("award-user/{userId:int}_{awardId:int}")]
@@ -169,11 +176,15 @@ namespace MVCPL.Controllers
             if (newReward.User?.Id == userId)
             {
                 object model = "This user already has this award!";
+
+                //TODO: reuse error page
                 return View("AwardError", model);
             }
             if (newReward.User != null)
             {
                 object model = "This award is not vacant!";
+
+                //TODO: reuse error page
                 return View("AwardError", model);
             }
 
@@ -242,41 +253,7 @@ namespace MVCPL.Controllers
             Session["deletedUsers"] = null;
 
 
-            return RedirectToAction("Index", "User");
+            return RedirectToAction("Index");
         }
-
-        //[Route("create-user")]
-        //[HttpGet]
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //[Route("user/{id:int}")]
-        //[HttpGet]
-        //public ActionResult Details(int id)
-        //{
-        //    var possibleRewards = _rewardService
-        //        .GetAllPossibleRewards(id)
-        //        .Select(_ => _.ToViewModel())
-        //        .ToList();
-        //    var model = _userService
-        //        .GetUserById(id)
-        //        .ToViewModel(possibleRewards);
-
-        //    return View(model);
-        //}
-
-        ////TODO: Null reference
-        //[Route("user/{id:int}/delete")]
-        //[HttpGet]
-        //public ActionResult Delete(int id)
-        //{
-        //    var model = _userService
-        //        .GetUserById(id)
-        //        .ToViewModel();
-
-        //    return View(model);
-        //}
     }
 }

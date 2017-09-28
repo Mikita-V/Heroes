@@ -2,9 +2,9 @@
 @using MVCPL.Util.HtmlHelpers
 @model MVCPL.Models.UserViewModel
 
-<div class="modal fade" id="editModal" role="dialog">
+<div class="modal fade" id="editUserModal" role="dialog">
     <div class="modal-dialog">
-        @using (Html.BeginForm("Update", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "editFormId" }))
+        @using (Html.BeginForm("Update", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "editUserForm" }))
         {
             <div class="modal-content">
                 
@@ -80,7 +80,7 @@
 <script>
 
     $(function () {
-        $.validator.unobtrusive.parse("#editFormId");
+        $.validator.unobtrusive.parse("#editUserForm");
     });
 
 </script>

@@ -1,6 +1,15 @@
 ﻿//TODO: refactor
 
-function editFailed(result) {
+$.ajaxSetup({
+    beforeSend: function () {
+        $('#loaderImageContainer').show();
+    },
+    complete: function () {
+        $('#loaderImageContainer').hide();
+    }
+});
+
+function ajaxValidate(result) {
     var errorsInfo = result;
     for (var i = 0; i < result.length; ++i) {
         var key = errorsInfo[i].key;
@@ -9,14 +18,13 @@ function editFailed(result) {
     }
 }
 
-$('#formid').ajaxForm(function (data) {
-    debugger;
+$('#createUserForm').ajaxForm(function (data) {
     $("span[data-valmsg-for]").text('');
     if (typeof data === 'string') {
         $('#usersTableBody').append(data);
-        $('#myModal').modal('hide');
+        $('#createUserModal').modal('hide');
     } else {
-        editFailed(data);
+        ajaxValidate(data);
     }
 });
 
@@ -24,8 +32,8 @@ function editUser(userId) {
     $.ajax({
         url: 'user/' + userId + '/edit',
         success: function (data) {
-            $('#modalWrapper').html(data);
-            $('#editModal').modal();
+            $('#editUserModalWrapper').html(data);
+            $('#editUserModal').modal();
         },
         error: function (error) {
             alert('Error!');
@@ -37,7 +45,7 @@ function rewardDetails(rewardId) {
     $.ajax({
         url: 'award/' + rewardId,
         success: function (data) {
-            $('#rewardWrapper').html(data);
+            $('#rewardDetailsModalWrapper').html(data);
             $('#rewardDetailsModal').modal();
         },
         error: function (error) {
@@ -45,13 +53,3 @@ function rewardDetails(rewardId) {
         }
     });
 }
-
-jQuery.ajaxSetup({
-    beforeSend: function () {
-        $('#loaderImageContainer').show();
-    },
-    complete: function () {
-        $('#loaderImageContainer').hide();
-    },
-    success: function () { }
-});

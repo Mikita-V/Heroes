@@ -1,8 +1,8 @@
 ﻿@model MVCPL.Models.UserViewModel
 
-<div class="modal fade" id="myModal" role="dialog">
+<div class="modal fade" id="createUserModal" role="dialog">
     <div class="modal-dialog">
-        @using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "formid" }))
+        @using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "createUserForm" }))
         {
             <div class="modal-content">
 
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <input id="btnCreateUser" onclick="editFailed" type="submit" value="Create" class="btn btn-default" />
+                    <input id="btnCreateUser" onclick="ajaxValidate" type="submit" value="Create" class="btn btn-default" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
 

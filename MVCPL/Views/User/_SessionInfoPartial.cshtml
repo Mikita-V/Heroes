@@ -1,62 +1,71 @@
 ﻿@using MVCPL.Models
 
 @*TODO: Refactor*@
-<div id="sessionInfo">
-    <div>
-        @{
-            var createdUsers = ViewBag.CreatedUsers as List<UserViewModel>;
-            var updatedUsers = ViewBag.UpdatedUsers as List<UserViewModel>;
-            var deletedUsers = ViewBag.DeletedUsers as List<int>;
-            var isSessionEmpty = createdUsers == null && updatedUsers == null && deletedUsers == null;
 
-            if (!isSessionEmpty)
-            {
-                <h3>Session Info:</h3>
-                <br />
-            }
+<div class="modal fade" id="sessionInfoModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-            if (createdUsers != null)
-            {
-                <ul id="sessionCreatedUsers">
-                    Created Users:
-                    @foreach (var user in createdUsers)
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Session Info:</h4>
+            </div>
+
+            <div class="modal-body">
+                @{
+                    var createdUsers = ViewBag.CreatedUsers as List<UserViewModel>;
+                    var updatedUsers = ViewBag.UpdatedUsers as List<UserViewModel>;
+                    var deletedUsers = ViewBag.DeletedUsers as List<int>;
+                    var isSessionEmpty = createdUsers == null && updatedUsers == null && deletedUsers == null;
+
+
+                    if (createdUsers != null)
                     {
-                        <li>@user.Name / @user.Age</li>
+                        @*TODO: ul to table; html helper*@
+                        <ul id="sessionCreatedUsers">
+                            Users to be created:
+                            @foreach (var user in createdUsers)
+                            {
+                                <li>@user.Name / @user.Age</li>
+                            }
+                        </ul>
                     }
-                </ul>
-            }
 
-            if (updatedUsers != null)
-            {
-                <ul>
-                    Updated Users:
-                    @foreach (var user in updatedUsers)
+                    if (updatedUsers != null)
                     {
-                        <li>@user.Name / @user.Age</li>
+                        <ul>
+                            Users to be updated:
+                            @foreach (var user in updatedUsers)
+                            {
+                                <li>@user.Name / @user.Age</li>
+                            }
+                        </ul>
                     }
-                </ul>
-            }
 
-            if (deletedUsers != null)
-            {
-                <ul id="sessionDeletedUsers">
-                    Deleted Users:
-                    @foreach (var id in deletedUsers)
+                    if (deletedUsers != null)
                     {
-                        <li>@id</li>
+                        <ul id="sessionDeletedUsers">
+                            Users to be deleted:
+                            @foreach (var id in deletedUsers)
+                            {
+                                <li>@id</li>
+                            }
+                        </ul>
                     }
-                </ul>
-            }
 
-            if (!isSessionEmpty)
-            {
-                <div>
-                    @Html.ActionLink("Apply Changes", "ApplyChanges", new { apply = true }) |
-                    @Html.ActionLink("Discard Changes", "ApplyChanges", new { apply = false })
-                </div>
-            }
+                }
+            </div>
 
-        }
+            <div class="modal-footer">
+                @if (!isSessionEmpty)
+                {
+                    <div>
+                        @Html.ActionLink("Apply Changes", "ApplyChanges", new { apply = true }, new { @class = "btn btn-success" })
+                        @Html.ActionLink("Discard Changes", "ApplyChanges", new { apply = false }, new { @class = "btn btn-danger" })
+                    </div>
+                }
+            </div>
+
+        </div>
     </div>
-
 </div>

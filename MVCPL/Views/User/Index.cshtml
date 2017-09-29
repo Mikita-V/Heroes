@@ -11,13 +11,13 @@
     @Html.ActionLink("Download user's list", "DownloadUsers", new { }, new { @class = "btn btn-info" })
 </div>
 
+<div id="sessionInfoModalWrapper">
+    @Html.Partial("_SessionInfoPartial")
+</div>
 
 @Html.Partial("_CreatePartial", new UserViewModel { BirthDate = DateTime.Now })
 @Html.Partial("_UsersTable", Model)
 @Ajax.ActionLink("Update", "Index", new { }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace }, new { @class = "btn btn-lg btn-success" })
-
-
-@Html.Partial("_SessionInfoPartial")
 
 @section Scripts{
     @Scripts.Render("~/bundles/ajax")

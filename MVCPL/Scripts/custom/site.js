@@ -9,34 +9,47 @@ $.ajaxSetup({
     }
 });
 
-function ajaxValidate(result) {
-    var errorsInfo = result;
-    for (var i = 0; i < result.length; ++i) {
-        var key = errorsInfo[i].key;
-        var message = errorsInfo[i].errors[0];
-        $("span[data-valmsg-for='" + key + "']").text(message);
-    }
-}
-
 $('#createUserForm').ajaxForm(function (data) {
-    $("span[data-valmsg-for]").text('');
-    if (typeof data === 'string') {
-        $('#usersTableBody').append(data);
-        $('#createUserModal').modal('hide');
-    } else {
-        ajaxValidate(data);
-    }
+    createUser(data, '#usersTableBody');
 });
 
 $('#createUserSafeForm').ajaxForm(function (data) {
-    $("span[data-valmsg-for]").text('');
+    createUser(data, '#sessionInfoModalWrapper');
+});
+
+$('#sessionInfoMenuItem a').click(function() {
+    $('#sessionInfoModal').modal();
+});
+
+$('#btnCreateUser').click(function (result) {
+    ajaxValidate(result);
+});
+
+$('#btnCreateUserSafe').click(function (result) {
+    ajaxValidate(result);
+    $('#sessionInfoMenuItem').show();
+});
+
+function createUser(data, userTableId) {
+    clearErrorMessages();
     if (typeof data === 'string') {
-        $('#sessionInfo').html(data);
+        $(userTableId).html(data);
         $('#createUserModal').modal('hide');
     } else {
         ajaxValidate(data);
     }
-});
+}
+
+function ajaxValidate(result) {
+    var errorsInfo = result;
+    if (errorsInfo != null && errorsInfo.length !== 0) {
+        for (var i = 0; i < result.length; ++i) {
+            var key = errorsInfo[i].key;
+            var message = errorsInfo[i].errors[0];
+            $("span[data-valmsg-for='" + key + "']").text(message);
+        }
+    }
+}
 
 function editUser(userId) {
     $.ajax({
@@ -62,4 +75,12 @@ function rewardDetails(rewardId) {
             alert('Error!');
         }
     });
+}
+
+function showSessionMenuItem() {
+    $('#sessionInfoMenuItem').show();
+}
+
+function clearErrorMessages() {
+    $("span[data-valmsg-for]").text('');
 }

@@ -26,6 +26,16 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Users", "Index", "User")</li>
                     <li>@Html.ActionLink("Rewards", "Index", "Reward")</li>
+                    @*TODO: refactor + helper method*@
+                    @if (Session["createdUsers"] != null || Session["updatedUsers"] != null || Session["deletedUsers"] != null)
+                    {
+                        <li style="display: block;" id="sessionInfoMenuItem"><a href="#">Session</a></li>
+                    }
+                    else
+                    {
+                        <li style="display: none;" id="sessionInfoMenuItem"><a href="#">Session</a></li>
+                    }
+
                 </ul>
             </div>
         </div>

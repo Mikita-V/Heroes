@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using BLL.Interface;
 using MVCPL.Filters;
+using MVCPL.Infrastructure;
 using MVCPL.Models;
 using MVCPL.Infrastructure.Mapping;
 
@@ -92,10 +93,48 @@ namespace MVCPL.Controllers
         {
             //TODO: null reference
             //TODO: include rewards from session
+            //var possibleRewards = _rewardService
+            //    .GetAllPossibleRewards(id)
+            //    .Select(_ => _.ToViewModel())
+            //    .ToList();
+            //var model = _userService
+            //    .GetUserById(id)
+            //    .ToViewModel(possibleRewards);
+
+            //return PartialView("_EditPartial", model);
+
+            if (Session["updatedUsers"] != null)
+            {
+                var usersToUpdate = Session["updatedUsers"] as List<UserViewModel>;
+                var sessionModel = usersToUpdate?.SingleOrDefault(_ => _.Id == id);
+                if (sessionModel != null)
+                {
+                    return PartialView("_EditPartial", sessionModel);
+                }         
+            }
+
+
             var possibleRewards = _rewardService
                 .GetAllPossibleRewards(id)
                 .Select(_ => _.ToViewModel())
                 .ToList();
+
+            if (Session["vacantRewards"] != null)
+            {
+                if (Session["vacantRewards"] is List<RewardViewModel> vacantRewards && vacantRewards.Any())
+                {
+                    possibleRewards = possibleRewards.Union(vacantRewards, new RewardViewModelEqualityComparer()).ToList();
+                }       
+            }
+
+            if (Session["bookedRewards"] != null)
+            {
+                if (Session["bookedRewards"] is List<RewardViewModel> bookedRewards && bookedRewards.Any())
+                {
+                    possibleRewards = possibleRewards.Except(bookedRewards, new RewardViewModelEqualityComparer()).ToList();
+                }
+            }
+
             var model = _userService
                 .GetUserById(id)
                 .ToViewModel(possibleRewards);
@@ -129,7 +168,39 @@ namespace MVCPL.Controllers
                 }
 
                 var updatedUsers = Session["updatedUsers"] as List<UserViewModel>;
-                updatedUsers?.Add(user);
+                var updatedUser = updatedUsers?.SingleOrDefault(_ => _.Id == user.Id);
+                if (updatedUser == null)
+                {
+                    updatedUsers?.Add(user);
+                }
+                else
+                {
+                    updatedUsers.Remove(updatedUser);
+                    updatedUsers.Add(user);
+                }
+
+
+                if (Session["vacantRewards"] == null)
+                {
+                    Session["vacantRewards"] = new List<RewardViewModel>();
+                }
+
+                if (Session["bookedRewards"] == null)
+                {
+                    Session["bookedRewards"] = new List<RewardViewModel>();
+                }
+
+                foreach (var reward in user.Rewards)
+                {
+                    if (reward.IsSelected)
+                    {
+                        ((List<RewardViewModel>) Session["bookedRewards"]).Add(reward);
+                    }
+                    else
+                    {
+                        ((List<RewardViewModel>)Session["vacantRewards"]).Add(reward);
+                    }
+                }
             }
 
             //TODO: different behavior if model is not valid
@@ -158,9 +229,11 @@ namespace MVCPL.Controllers
                 Session["deletedUsers"] = new List<int>();
             }
 
-            var deletedUsers = Session["deletedUsers"] as List<int>;
-            deletedUsers?.Add(id);
-
+            if (Session["deletedUsers"] is List<int> deletedUsers && !deletedUsers.Contains(id))
+            {
+                deletedUsers.Add(id);
+            }
+            
             //TODO: update only deleted users
             this.CopySessionInfoToViewBag();
 

@@ -155,6 +155,7 @@
     <Compile Include="Infrastructure\DI\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\Mapping\MvcRewardMapping.cs" />
     <Compile Include="Infrastructure\Mapping\MvcUserMapping.cs" />
+    <Compile Include="Infrastructure\RewardViewModelEqualityComparer.cs" />
     <Compile Include="Util\Extensions\HttpPostedFileBaseExtension.cs" />
     <Compile Include="Models\RewardViewModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />

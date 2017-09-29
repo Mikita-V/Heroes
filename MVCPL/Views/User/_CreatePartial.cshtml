@@ -2,7 +2,8 @@
 
 <div class="modal fade" id="createUserModal" role="dialog">
     <div class="modal-dialog">
-        @using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "createUserForm" }))
+        @*@using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "createUserForm" }))*@
+        @using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data", id = "createUserSafeForm" }))
         {
             <div class="modal-content">
 

@@ -17,63 +17,7 @@
 @Ajax.ActionLink("Update", "Index", new { }, new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "usersTable", InsertionMode = InsertionMode.Replace }, new { @class = "btn btn-lg btn-success" })
 
 
-@*TODO: Refactor*@
-<div>
-    @{
-        var createdUsers = ViewBag.CreatedUsers as List<UserViewModel>;
-        var updatedUsers = ViewBag.UpdatedUsers as List<UserViewModel>;
-        var deletedUsers = ViewBag.DeletedUsers as List<int>;
-        var isSessionEmpty = createdUsers == null && updatedUsers == null && deletedUsers == null;
-
-        if (!isSessionEmpty)
-        {
-            <h3>Session Info:</h3>
-            <br />
-        }
-
-        if (createdUsers != null)
-        {
-            <ul>
-                Created Users:
-                @foreach (var user in createdUsers)
-                {
-                    <li>@user.Name / @user.Age</li>
-                }
-            </ul>
-        }
-
-        if (updatedUsers != null)
-        {
-            <ul>
-                Updated Users:
-                @foreach (var user in updatedUsers)
-                {
-                    <li>@user.Name / @user.Age</li>
-                }
-            </ul>
-        }
-
-        if (deletedUsers != null)
-        {
-            <ul>
-                Deleted Users:
-                @foreach (var id in deletedUsers)
-                {
-                    <li>@id</li>
-                }
-            </ul>
-        }
-
-        if (!isSessionEmpty)
-        {
-            <div>
-                @Html.ActionLink("Apply Changes", "ApplyChanges", new { apply = true }) |
-                @Html.ActionLink("Discard Changes", "ApplyChanges", new { apply = false })
-            </div>
-        }
-
-    }
-</div>
+@Html.Partial("_SessionInfoPartial")
 
 @section Scripts{
     @Scripts.Render("~/bundles/ajax")

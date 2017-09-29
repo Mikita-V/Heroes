@@ -293,6 +293,7 @@
     <Content Include="Views\User\_UserRow.cshtml" />
     <Content Include="Views\User\_EditPartial.cshtml" />
     <Content Include="Views\Shared\_DetailsPartial.cshtml" />
+    <Content Include="Views\User\_SessionInfoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

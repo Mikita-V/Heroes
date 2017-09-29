@@ -28,6 +28,16 @@ $('#createUserForm').ajaxForm(function (data) {
     }
 });
 
+$('#createUserSafeForm').ajaxForm(function (data) {
+    $("span[data-valmsg-for]").text('');
+    if (typeof data === 'string') {
+        $('#sessionInfo').html(data);
+        $('#createUserModal').modal('hide');
+    } else {
+        ajaxValidate(data);
+    }
+});
+
 function editUser(userId) {
     $.ajax({
         url: 'user/' + userId + '/edit',

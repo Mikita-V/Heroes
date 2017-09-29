@@ -34,9 +34,7 @@ namespace MVCPL.Controllers
                     .Select(_ => _.ToViewModel());
 
             //TODO: Refactor
-            ViewBag.CreatedUsers = Session["createdUsers"];
-            ViewBag.UpdatedUsers = Session["updatedUsers"];
-            ViewBag.DeletedUsers = Session["deletedUsers"];
+            this.CopySessionInfoToViewBag();
 
             if (Request.IsAjaxRequest())
             {
@@ -50,40 +48,41 @@ namespace MVCPL.Controllers
         [ValidateAjax]
         public ActionResult Create(UserViewModel user)
         {
-            if (ModelState.IsValid)
-            {
-                var bllUser = user.ToBllModel();
-                _userService.CreateUser(bllUser);
-
-                if (Request.IsAjaxRequest())
-                {
-                    //TODO: Get user from database or generate ID as GUID
-                    return PartialView("_UserRow", user);
-                }
-            }
-
-            //TODO: different behavior if model is not valid
-            return RedirectToAction("Index");
-
             //if (ModelState.IsValid)
             //{
-            //    if (Session["createdUsers"] == null)
-            //    {
-            //        Session["createdUsers"] = new List<UserViewModel>();
-            //    }
-
-            //    var createdUsers = Session["createdUsers"] as List<UserViewModel>;
-            //    createdUsers?.Add(user);
+            //    var bllUser = user.ToBllModel();
+            //    _userService.CreateUser(bllUser);
 
             //    if (Request.IsAjaxRequest())
             //    {
-            //        ////TODO: Get user from database or generate ID as GUID
-            //        //return PartialView("_UserRow", user);
+            //        //TODO: Get user from database or generate ID as GUID
+            //        return PartialView("_UserRow", user);
             //    }
             //}
 
             ////TODO: different behavior if model is not valid
             //return RedirectToAction("Index");
+
+            if (ModelState.IsValid)
+            {
+                if (Session["createdUsers"] == null)
+                {
+                    Session["createdUsers"] = new List<UserViewModel>();
+                }
+
+                var createdUsers = Session["createdUsers"] as List<UserViewModel>;
+                createdUsers?.Add(user);
+
+                if (Request.IsAjaxRequest())
+                {
+                    //TODO: Get user from database or generate ID as GUID
+                    this.CopySessionInfoToViewBag();
+                    return PartialView("_SessionInfoPartial");
+                }
+            }
+
+            //TODO: different behavior if model is not valid
+            return RedirectToAction("Index");
         }
 
         //TODO: make ajax-only
@@ -92,6 +91,7 @@ namespace MVCPL.Controllers
         public ActionResult Update(int id)
         {
             //TODO: null reference
+            //TODO: include rewards from session
             var possibleRewards = _rewardService
                 .GetAllPossibleRewards(id)
                 .Select(_ => _.ToViewModel())
@@ -107,33 +107,33 @@ namespace MVCPL.Controllers
         [HttpPost]
         public ActionResult Update(UserViewModel user)
         {
-            if (ModelState.IsValid)
-            {
-                //TODO: null reference
-                var selectedRewards = user.Rewards
-                    .Where(_ => _.IsSelected)
-                    .Select(_ => _.ToBllModel())
-                    .ToList();
-                var bllUser = user.ToBllModel(selectedRewards);
-                _userService.UpdateUser(bllUser);
-            }
-
-            //TODO: different behavior if model is not valid
-            return RedirectToAction("Index");
-
             //if (ModelState.IsValid)
             //{
-            //    if (Session["updatedUsers"] == null)
-            //    {
-            //        Session["updatedUsers"] = new List<UserViewModel>();
-            //    }
-
-            //    var updatedUsers = Session["updatedUsers"] as List<UserViewModel>;
-            //    updatedUsers?.Add(user);
+            //    //TODO: null reference
+            //    var selectedRewards = user.Rewards
+            //        .Where(_ => _.IsSelected)
+            //        .Select(_ => _.ToBllModel())
+            //        .ToList();
+            //    var bllUser = user.ToBllModel(selectedRewards);
+            //    _userService.UpdateUser(bllUser);
             //}
 
             ////TODO: different behavior if model is not valid
             //return RedirectToAction("Index");
+
+            if (ModelState.IsValid)
+            {
+                if (Session["updatedUsers"] == null)
+                {
+                    Session["updatedUsers"] = new List<UserViewModel>();
+                }
+
+                var updatedUsers = Session["updatedUsers"] as List<UserViewModel>;
+                updatedUsers?.Add(user);
+            }
+
+            //TODO: different behavior if model is not valid
+            return RedirectToAction("Index");
         }
 
         //TODO: make ajax-only
@@ -141,28 +141,30 @@ namespace MVCPL.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var user = _userService.GetUserById(id);
-            if (user != null)
-            {
-                _userService.DeleteUser(user);
-            }
-
-            var model = _userService
-                .GetAllUsers()
-                .Select(_ => _.ToViewModel());
-
-            return PartialView("_UsersTable", model);
-
-            //if (Session["deletedUsers"] == null)
+            //var user = _userService.GetUserById(id);
+            //if (user != null)
             //{
-            //    Session["deletedUsers"] = new List<int>();
+            //    _userService.DeleteUser(user);
             //}
 
-            //var deletedUsers = Session["deletedUsers"] as List<int>;
-            //deletedUsers?.Add(id);
+            //var model = _userService
+            //    .GetAllUsers()
+            //    .Select(_ => _.ToViewModel());
 
-            ////TODO: Update session table here
-            //return RedirectToAction("Index");
+            //return PartialView("_UsersTable", model);
+
+            if (Session["deletedUsers"] == null)
+            {
+                Session["deletedUsers"] = new List<int>();
+            }
+
+            var deletedUsers = Session["deletedUsers"] as List<int>;
+            deletedUsers?.Add(id);
+
+            //TODO: update only deleted users
+            this.CopySessionInfoToViewBag();
+
+            return PartialView("_SessionInfoPartial");
         }
 
         [Route("award-user/{userId:int}_{awardId:int}")]
@@ -206,9 +208,7 @@ namespace MVCPL.Controllers
         {
             if (!apply)
             {
-                Session["createdUsers"] = null;
-                Session["updatedUsers"] = null;
-                Session["deletedUsers"] = null;
+                this.ClearSession();
 
                 return RedirectToAction("Index", "User");
             }
@@ -248,12 +248,24 @@ namespace MVCPL.Controllers
                 }
             }
 
-            Session["createdUsers"] = null;
-            Session["updatedUsers"] = null;
-            Session["deletedUsers"] = null;
+            this.ClearSession();
 
 
             return RedirectToAction("Index");
+        }
+
+        private void CopySessionInfoToViewBag()
+        {
+            ViewBag.CreatedUsers = Session["createdUsers"];
+            ViewBag.UpdatedUsers = Session["updatedUsers"];
+            ViewBag.DeletedUsers = Session["deletedUsers"];
+        }
+
+        private void ClearSession()
+        {
+            Session["createdUsers"] = null;
+            Session["updatedUsers"] = null;
+            Session["deletedUsers"] = null;
         }
     }
 }
